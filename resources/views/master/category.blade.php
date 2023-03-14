@@ -67,8 +67,8 @@
                             <label for="exampleInputEmail1" class="form-label">Type transaksi</label>
                             <select id="add-type" class="form-select" name="add-type">
                               <option disabled>-pilih-</option>
-                              <option value="1">Debit</option>
-                              <option value="0">Kredit</option>
+                              <option value="0">Debit</option>
+                              <option value="1">Kredit</option>
                             </select>
                             <div id="emailHelp" class="form-text">Jika Jenis Ini bertambah apakah menambah debit atau kredit</div>
                           </div>
@@ -106,8 +106,8 @@
                             <label for="exampleInputEmail1" class="form-label">Type transaksi</label>
                             <select id="edit-type" class="form-select" name="add-type">
                               <option disabled>-pilih-</option>
-                              <option value="1">Debit</option>
-                              <option value="0">Kredit</option>
+                              <option value="0">Debit</option>
+                              <option value="1">Kredit</option>
                             </select>
                             <div id="emailHelp" class="form-text">Jika Jenis Ini bertambah apakah menambah debit atau kredit</div>
                           </div>
@@ -161,7 +161,7 @@
                         <td class="text-center">${response.nama}</td>
                         <td class="text-center">${response.type}</td>
                         <td class="text-center">
-                          <button class="btn btn-sm btn-warning" data-id="${response.id} data-no="${response.nomor}"><i class="bi bi-pencil"></i></button>
+                          <button class="btn btn-sm btn-warning" id="btn-edit" data-id="${response.id} data-no="${response.nomor}"><i class="bi bi-pencil"></i></button>
                           <button class="btn btn-sm btn-danger"><i class="bi bi-trash2"></i></button>
                         </td>
                     </tr>
@@ -259,7 +259,7 @@
                         <td class="text-center">${response.nama}</td>
                         <td class="text-center">${response.type}</td>
                         <td class="text-center">
-                          <button class="btn btn-sm btn-warning" data-id="${response.id}" data-no="${response.nomor}"><i class="bi bi-pencil"></i></button>
+                          <button class="btn btn-sm btn-warning" id="btn-edit" data-id="${response.id}" data-no="${response.nomor}"><i class="bi bi-pencil"></i></button>
                           <button class="btn btn-sm btn-danger"><i class="bi bi-trash2"></i></button>
                         </td>
                     </tr>

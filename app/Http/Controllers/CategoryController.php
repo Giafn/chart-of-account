@@ -49,8 +49,7 @@ class CategoryController extends Controller
             $type = 'Kredit';
         }
         $nomor = Category::get()->count();
-        $id = $request->id;
-
+        $id = $post->id;
         //return response
         return response()->json([
             'success' => true,
@@ -119,7 +118,6 @@ class CategoryController extends Controller
         if($request->type == 1){
             $type = 'Kredit';
         }
-        $id = $request->id;
         $nomor = $request->nomor;
 
         //return response
@@ -128,7 +126,8 @@ class CategoryController extends Controller
             'message' => 'Data Berhasil Diudapte!',
             'nama'    => $request->nama,
             'type'    => $type,
-            'nomor'   => $nomor  
+            'nomor'   => $nomor,
+            'id'   => $id  
         ]);
     }
 
