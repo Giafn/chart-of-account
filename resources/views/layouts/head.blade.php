@@ -17,4 +17,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <style>
+        #menu > li > a{
+            color: white !important;
+        }
+    </style> --}}
 </head>
