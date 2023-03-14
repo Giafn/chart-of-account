@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
+
 
 class CoaController extends Controller
 {
@@ -22,7 +24,9 @@ class CoaController extends Controller
     }
     public function category()
     {
-        
-        return view('master.category');
+
+        $data = Category::get();
+
+        return view('master.category', compact('data'));
     }
 }
