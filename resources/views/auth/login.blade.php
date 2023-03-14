@@ -3,11 +3,12 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-5">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                {{-- <div class="card-header text-center">{{ __('Login') }}</div> --}}
 
-                <div class="card-body">
+                <div class="card-body py-5">
+                    <h4 class="text-center mb-4">{{ __('Login') }}</h4>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
@@ -56,12 +57,6 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
                             </div>
                         </div>
                     </form>
