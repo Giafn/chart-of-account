@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TransaksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [TransaksiController::class, 'index'])->name('home');
+Route::get('/', [TransaksiController::class, 'coa'])->name('home');
+Route::get('/', [TransaksiController::class, 'category'])->name('home');
 Route::get('/transaksi', function () {
     return view('transaksi');
 })->name('transaksi');

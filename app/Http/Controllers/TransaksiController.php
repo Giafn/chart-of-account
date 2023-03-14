@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class transaksi extends Controller
+class TransaksiController extends Controller
 {
     public function __construct()
     {
@@ -17,6 +17,14 @@ class transaksi extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
+    {
+        return view('home');
+    }
+    public function coa()
+    {
+        return view('home');
+    }
+    public function category()
     {
         return view('home');
     }
