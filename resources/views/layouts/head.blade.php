@@ -17,7 +17,21 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     {{-- <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet"> --}}
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <style>
+        #toast-container .toast-close-button{
+            padding: 0.375rem 0.75rem !important;
+            color: white !important;
+            background-color: #dc3545 !important;
+            font-size: 0.9rem !important;
+            font-weight: 400 !important;
+            line-height: 1.6 !important;
+            opacity: 1 !important; 
+        }
+        #toast-container .toast-close-button:hover{
+            filter:drop-shadow(.1rem .1rem .3rem #e23) !important;
+
+        }
+    </style>
 </head>

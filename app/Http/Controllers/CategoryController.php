@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 Use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
@@ -16,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::get();
+        $data = Category::paginate(3);
         return view('master.category', compact('data'));
     }
 
@@ -40,14 +41,17 @@ class CategoryController extends Controller
         }
 
         //create post
-        $post = Category::create([
-            'nama'     => $request->nama, 
-            'indicator'   => $request->type
-        ]);
+        $post = new Category;
+        $post->nama = $request->nama;
+        $post->indicator = $request->type;
+        $post->save();
+
+
         $type = 'Debit';
         if($request->type == 0){
             $type = 'Kredit';
         }
+
         $nomor = Category::get()->count();
         $id = $post->id;
         //return response
@@ -76,6 +80,7 @@ class CategoryController extends Controller
             'data'    => $category  
         ]); 
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -107,9 +112,9 @@ class CategoryController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        //create post
-        $post = new Category;
-        $post->where('id',$id)->update([
+        //create update
+        $update = new Category;
+        $update->where('id',$id)->update([
             'nama'     => $request->nama, 
             'indicator'   => $request->type
         ]);
@@ -139,6 +144,13 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //delete post by ID
+        Category::where('id', $id)->delete();
+
+        //return response
+        return response()->json([
+            'success' => true,
+            'message' => 'row deleted successfully!.',
+        ]); 
     }
 }

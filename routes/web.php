@@ -28,9 +28,10 @@ Route::get('/', [TransaksiController::class, 'index'])->name('home');
 Route::get('/master/coa', [CoaController::class, 'index'])->name('master.COA');
 
 Route::get('/master/category', [CategoryController::class, 'index'])->name('master.category');
-Route::Post('/add-category', [CategoryController::class, 'store']);
+Route::post('/add-category', [CategoryController::class, 'store']);
 Route::get('/category/{category_id}', [CategoryController::class, 'show']);
 Route::put('/categoryupdate/{category_id}', [CategoryController::class, 'update']);
+Route::delete('/categorydelete/{category_id}', [CategoryController::class, 'destroy']);
 
 
 Route::get('/transaksi', function () {
