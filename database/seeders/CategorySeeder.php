@@ -22,7 +22,7 @@ class CategorySeeder extends Seeder
             'Meal Expense'
         );
         $indicator = array(
-            1,1,0,0,0
+            0,0,1,1,1
         );
         $i = 0;
         while($i < 5){

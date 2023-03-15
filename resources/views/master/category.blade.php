@@ -24,7 +24,6 @@
                               }else{
                                 $i= ($data->currentPage()-1) * ($data->perPage() + 1);
                               }
-                                
                               @endphp
                               @foreach ($data as $item)
                                   <tr class="text-center" id="{{'index_'.$item->id}}">
@@ -139,7 +138,11 @@
               <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
                   <div class="modal-body">
-                    <h5 class="text-center">Confirm Delete?</h5>
+                    <div class="text-center mb-3">
+                      <h5>Confirm Delete?</h5>
+                      <small>If this category is deleted, all accounts with the same category will be deleted</small>
+                    </div>
+
                       <div class="row justify-content-center mb-3">
                         <div class="col-6 text-end">
                           <form>
@@ -320,10 +323,6 @@
 
   }
 
-  
-
-  
-    
-
+ 
 </script>
 @endpush

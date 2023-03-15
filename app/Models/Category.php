@@ -12,4 +12,9 @@ class Category extends Model
         'nama',
         'indicator',
     ];
+
+    public function coa()
+    {
+        return $this->hasMany(Coa::class,'id','category_id');
+    }
 }

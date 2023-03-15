@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coa extends Model
 {
-    use HasFactory;
+    // use HasFactory;
+    protected $table = 'coa';
     protected $fillable = [
         'kode',
         'nama',
         'category_id',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

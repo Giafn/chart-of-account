@@ -18,26 +18,29 @@ use App\Http\Controllers\CategoryController;
 
 
 Auth::routes();
-// Route::get('/', function () { return view('home'); })->name('home');
-// Route::get('/transaksi', function () { return view('transaksi'); })->name('transaksi');
-// Route::get('/master/category', function () { return view('master.coa'); })->name('master.category');
-// Route::get('/master/coa', function () { return view('master.coa'); })->name('master.COA');
 
+// dahsboard
 Route::get('/', [TransaksiController::class, 'index'])->name('home');
 
+// routing master Chart Of Account
 Route::get('/master/coa', [CoaController::class, 'index'])->name('master.COA');
+Route::post('/add-coa', [CoaController::class, 'store']);
+Route::get('/coa/{coa_id}', [CoaController::class, 'show']);
+Route::put('/coaupdate/{coa_id}', [CoaController::class, 'update']);
+Route::delete('/coadelete/{category_id}', [CoaController::class, 'destroy']);
 
+
+
+
+// routing master category
 Route::get('/master/category', [CategoryController::class, 'index'])->name('master.category');
 Route::post('/add-category', [CategoryController::class, 'store']);
 Route::get('/category/{category_id}', [CategoryController::class, 'show']);
 Route::put('/categoryupdate/{category_id}', [CategoryController::class, 'update']);
 Route::delete('/categorydelete/{category_id}', [CategoryController::class, 'destroy']);
 
-
+// routing transaksi
 Route::get('/transaksi', function () {
     return view('transaksi');
 })->name('transaksi');
 
-
-
-// https://santrikoding.com/tutorial-laravel-crud-ajax-5-edit-dan-update-data-dengan-ajax
