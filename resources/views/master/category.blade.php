@@ -54,7 +54,6 @@
                   </div>
                   <div class="modal-body">
                     <h5 class="text-center">Tambah Kategori</h5>
-                    {{-- <form action="/add-category" method="POST"> --}}
                     <form>
                       @csrf
                       <div class="row justify-content-center mb-3">
@@ -66,11 +65,11 @@
                           <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Type transaksi</label>
                             <select id="add-type" class="form-select" name="add-type">
-                              <option disabled>-pilih-</option>
-                              <option value="0">Debit</option>
-                              <option value="1">Kredit</option>
+                              <option disabled selected>-silahkan pilih-</option>
+                              <option value="1">Debit</option>
+                              <option value="0">Kredit</option>
                             </select>
-                            <div id="emailHelp" class="form-text">Jika Jenis Ini bertambah apakah menambah debit atau kredit</div>
+                            <div id="emailHelp" class="form-text">Jika Jenis Account Ini bertambah apakah menambah debit atau kredit</div>
                           </div>
                           <button type="submit" class="btn btn-primary" id="store">Submit</button>
                         </div>
@@ -105,11 +104,11 @@
                           <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Type transaksi</label>
                             <select id="edit-type" class="form-select" name="add-type">
-                              <option disabled>-pilih-</option>
-                              <option value="0">Debit</option>
-                              <option value="1">Kredit</option>
+                              <option disabled value="null">-pilih-</option>
+                              <option value="1">Debit</option>
+                              <option value="0">Kredit</option>
                             </select>
-                            <div id="emailHelp" class="form-text">Jika Jenis Ini bertambah apakah menambah debit atau kredit</div>
+                            <div id="emailHelp" class="form-text">Jika Jenis Account Ini bertambah apakah menambah debit atau kredit</div>
                           </div>
                           <button type="submit" class="btn btn-primary" id="update">Submit</button>
                         </div>
@@ -123,6 +122,7 @@
 
 @push('js')
 <script>
+
   let table = new DataTable('#myTable');
 
   $('#store').click(function(e) {
@@ -146,16 +146,10 @@
             },
             success:function(response){
 
-                //show success message
-                Swal.fire({
-                    icon: 'success',
-                    title: `${response.message}`,
-                    showConfirmButton: false,
-                    timer: 3000
-                });
+                toastr.success(response.message, 'Success');
 
-                //data post
-                let post = `
+                //data baru
+                let row = `
                     <tr id="index_${response.id}">
                         <td class="fw-bold text-center">${response.nomor}</td>
                         <td class="text-center">${response.nama}</td>
@@ -168,11 +162,13 @@
                 `;
                 
                 //append to table
-                $('#tablebody').append(post);
+                $('#tablebody').append(row);
                 
-                //clear form
+                //clear tulisan modal
                 $('#add-nama').val('');
                 $('#add-type').val('');
+
+                
 
                 //close modal
                 $('#add-modal').modal('hide');
@@ -180,22 +176,15 @@
 
             },
             error:function(error){
-                
-                if(error.responseJSON.nama[0]) {
-
-                    Swal.fire({
-                      icon: 'error',
-                      title: `${error.responseJSON.nama[0]}`,
-                      showConfirmButton: false,
-                      timer: 3000
-                    });
-                    // $('#alert-title').html(error.responseJSON.title[0]);
-                }  
+                if(error.responseJSON.nama[0]){
+                  toastr.error(error.responseJSON.nama[0], 'Error!');
+                }
+                if(error.responseJSON.type[0]){
+                  toastr.error(error.responseJSON.type[0], 'Error!');
+                }
 
             }
-
-        });
-
+          });
   });
 
 
@@ -243,14 +232,8 @@
                 "_token": token
             },
             success:function(response){
-
-                //show success message
-                Swal.fire({
-                    icon: 'success',
-                    title: `${response.message}`,
-                    showConfirmButton: false,
-                    timer: 3000
-                });
+                //pesan sukses
+                toastr.success(response.message, 'Success');
 
                 //data post
                 let data1 = `
@@ -275,24 +258,13 @@
             },
             error:function(error){
                 
-                if(error.responseJSON.title[0]) {
+                if(error.responseJSON.nama[0]) {
 
-                    //show alert
-                    $('#alert-title-edit').removeClass('d-none');
-                    $('#alert-title-edit').addClass('d-block');
-
-                    //add message to alert
-                    $('#alert-title-edit').html(error.responseJSON.title[0]);
+                  toastr.error(error.responseJSON.nama[0], 'Error!');
                 } 
 
-                if(error.responseJSON.content[0]) {
-
-                    //show alert
-                    $('#alert-content-edit').removeClass('d-none');
-                    $('#alert-content-edit').addClass('d-block');
-
-                    //add message to alert
-                    $('#alert-content-edit').html(error.responseJSON.content[0]);
+                if(error.responseJSON.type[0]) {
+                  toastr.error(error.responseJSON.type[0], 'Error!');
                 } 
 
             }

@@ -24,12 +24,19 @@ Auth::routes();
 // Route::get('/master/coa', function () { return view('master.coa'); })->name('master.COA');
 
 Route::get('/', [TransaksiController::class, 'index'])->name('home');
+
 Route::get('/master/coa', [CoaController::class, 'index'])->name('master.COA');
+
 Route::get('/master/category', [CategoryController::class, 'index'])->name('master.category');
 Route::Post('/add-category', [CategoryController::class, 'store']);
 Route::get('/category/{category_id}', [CategoryController::class, 'show']);
 Route::put('/categoryupdate/{category_id}', [CategoryController::class, 'update']);
+
+
 Route::get('/transaksi', function () {
     return view('transaksi');
 })->name('transaksi');
 
+
+
+// https://santrikoding.com/tutorial-laravel-crud-ajax-5-edit-dan-update-data-dengan-ajax

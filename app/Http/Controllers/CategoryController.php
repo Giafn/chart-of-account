@@ -45,7 +45,7 @@ class CategoryController extends Controller
             'indicator'   => $request->type
         ]);
         $type = 'Debit';
-        if($request->type == 1){
+        if($request->type == 0){
             $type = 'Kredit';
         }
         $nomor = Category::get()->count();
@@ -115,7 +115,7 @@ class CategoryController extends Controller
         ]);
 
         $type = 'Debit';
-        if($request->type == 1){
+        if($request->type == 0){
             $type = 'Kredit';
         }
         $nomor = $request->nomor;
