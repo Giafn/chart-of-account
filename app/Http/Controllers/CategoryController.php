@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::paginate(3);
+        $data = Category::paginate(10);
         return view('master.category', compact('data'));
     }
 

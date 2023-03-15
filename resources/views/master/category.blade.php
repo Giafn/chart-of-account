@@ -18,7 +18,14 @@
                               </tr>
                             </thead>
                             <tbody id="tablebody">
-                              @php $i=1 @endphp
+                              @php 
+                              if($data->currentPage() == 1){
+                                $i= ($data->currentPage()-1) * ($data->perPage() + 1)+1;
+                              }else{
+                                $i= ($data->currentPage()-1) * ($data->perPage() + 1);
+                              }
+                                
+                              @endphp
                               @foreach ($data as $item)
                                   <tr class="text-center" id="{{'index_'.$item->id}}">
                                     <th scope="row" id="nomor_{{$item->id}}">{{$i}}</th>
@@ -37,15 +44,20 @@
                           </table>
                     </div>
                     <div class="row mx-3 my-3">
-                      <div class="col">
-                        {{ $data->links('vendor\pagination\bootstrap-4') }}
+                      <div class="col-md-6">
+                        <p> All data {{$data->total()}} - Page {{$data->currentPage()}}</p>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="pagination float-end">
+                          {{ $data->links('vendor\pagination\bootstrap-4') }}
+                        </div>
                       </div>
                     </div>
                 </div>
             </div>
             
             
-            <div id="result" class="d-none"></div>
+            {{-- <div id="result" class="d-none"></div> --}}
 
             <!-- Modal add-->
             <div class="modal fade" id="add-modal" tabindex="-1" aria-labelledby="add-modalLabel" aria-hidden="true">
@@ -121,6 +133,29 @@
                 </div>
               </div>
             </div>
+
+            {{-- modal-delete --}}
+            <div class="modal fade" id="modal-delete" tabindex="-1" aria-labelledby="add-modalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <h5 class="text-center">Confirm Delete?</h5>
+                      <div class="row justify-content-center mb-3">
+                        <div class="col-6 text-end">
+                          <form>
+                            @csrf
+                            <input type="hidden" name="delete-id" id="delete-id">
+                            <button class="btn btn-danger" id="confirm-delete" onclick="deleteData()">Delete</button>
+                          </form>
+                        </div>
+                        <div class="col-6 text-start">
+                          <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 @endsection
 
 @push('js')
@@ -149,22 +184,10 @@
 
                 toastr.success(response.message, 'Success');
 
-                //data baru
-                $('#result').load('{{url('/master/category')}}'+ ' #tablebody', function(result) {
-                        // let newdata = $('#result').children("#tablebody").html()
-                        let newdata = $('#result').html()
-                        $(`#tablebody`).replaceWith(newdata);
-                          console.log(newdata.length);
-                    });
-                
-                //clear tulisan modal
-                $('#add-nama').val('');
-                $('#add-type').val('0');
-
-                
-
                 //close modal
                 $('#add-modal').modal('hide');
+                //data baru
+                location.reload();
                 
 
             },
@@ -268,55 +291,36 @@
   $('body').on('click', '#btn-delete', function() {
 
     let id = $(this).data('id');
+
+    $('#delete-id').val(id);
+    $('#modal-delete').modal('show');
+
+  });
+  
+
+  function deleteData(){
+    let id = $('#delete-id').val();
     let token   = $("meta[name='csrf-token']").attr("content");
 
-    toastr.info("Click the button to delete","Delete data?",{
-      "closeButton": true,
-      "debug": false,
-      "newestOnTop": false,
-      "progressBar": false,
-      "positionClass": "toast-top-center",
-      "preventDuplicates": false,
-      "showDuration": "300",
-      "hideDuration": "1000",
-      "timeOut": 0,
-      "extendedTimeOut": 0,
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut",
-      "tapToDismiss": false,
-      "closeHtml" : `<button class="btn btn btn-danger">Delete</button>`,
-      "onCloseClick" : function() {
-        //  console.log('close button clicked'); 
-            $.ajax({
-                url: `/categorydelete/${id}`,
-                type: "DELETE",
-                cache: false,
-                data: {
-                    "_token": token
-                },
-                success:function(response){ 
-                    //notifikasi
-                    toastr.success(response.message, 'Success');
-                    //refresh data on table
-                    $('#result').load('{{url('/master/category')}}'+ ' #tablebody', function(result) {
-                        let newdata = $('#result').html()
-                        if(newdata.length > 150){
-                          $(`#tablebody`).replaceWith(newdata);
-                          console.log(newdata.length);
-                        }else{
-                          let kosong = `<p class="dataTables_empty text-center">No data available in table</p>`;
-                          $(`#tablebody`).replaceWith(kosong);
-                          console.log(newdata.length);
-                        }
-                    });
-                }
-            });
-        }
+    $.ajax({
+          url: `/categorydelete/${id}`,
+          type: "DELETE",
+          cache: false,
+          data: {
+              "_token": token
+          },
+          success:function(response){ 
+              //notifikasi
+              toastr.success(response.message, 'Success');
+              //refresh data on table
+              location.reload();
+          }
+      });
+        
 
-    });
-  });
+  }
+
+  
 
   
     
