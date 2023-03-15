@@ -76,7 +76,7 @@
                         </div>
                     </main>
                     <footer class="row bg-light py-4 mt-auto">
-                        <div class="col text-center"> &copy; HaluCorp 1933 </div>
+                        <div class="col text-center"> made with <span class="text-danger"><i class="bi bi-pc-display-horizontal"></i></span> by <a href="https://giafn.github.io/">Gia Fauzan</a> </div>
                     </footer>
                 </div>
             </div>

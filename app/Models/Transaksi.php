@@ -7,5 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    use HasFactory;
+    // use HasFactory;
+    protected $table = 'transaksi';
+    protected $fillable = [
+        'coa_id',
+        'desc',
+        'debit',
+        'credit',
+        'created_at',
+    ];
+
+    public function coa(){
+        return $this->belongsTo(Coa::class);
+    }
+
 }

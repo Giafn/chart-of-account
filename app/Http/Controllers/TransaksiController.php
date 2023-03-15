@@ -18,13 +18,11 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        return view('home');
+        
+        return view('transaksi');
     }
-    public function coa()
-    {
-        return view('home');
-    }
-    public function category()
+
+    public function dashboard()
     {
         return view('home');
     }

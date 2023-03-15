@@ -19,4 +19,8 @@ class Coa extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function transaksi(){
+        return $this->hasMany(Transaksi::class,'id','coa_id');
+    }
 }
