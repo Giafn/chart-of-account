@@ -17,8 +17,7 @@ class CreateTransaksiTable extends Migration
             $table->id();
             $table->integer('coa_id');
             $table->text('desc');
-            $table->integer('debit');
-            $table->integer('credit');
+            $table->integer('nominal');
             $table->timestamps();
         });
     }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\CoaController;
 use App\Http\Controllers\CategoryController;
@@ -20,14 +21,14 @@ use App\Http\Controllers\CategoryController;
 Auth::routes();
 
 // dahsboard
-Route::get('/', [TransaksiController::class, 'dashboard'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // routing master Chart Of Account
 Route::get('/master/coa', [CoaController::class, 'index'])->name('master.COA');
 Route::post('/add-coa', [CoaController::class, 'store']);
 Route::get('/coa/{coa_id}', [CoaController::class, 'show']);
 Route::put('/coaupdate/{coa_id}', [CoaController::class, 'update']);
-Route::delete('/coadelete/{category_id}', [CoaController::class, 'destroy']);
+Route::delete('/coadelete/{coa_id}', [CoaController::class, 'destroy']);
 
 // routing master category
 Route::get('/master/category', [CategoryController::class, 'index'])->name('master.category');
@@ -38,6 +39,10 @@ Route::delete('/categorydelete/{category_id}', [CategoryController::class, 'dest
 
 // routing transaksi
 Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
+Route::post('/add-transaksi', [TransaksiController::class, 'store']);
+Route::get('/transaksi/{transaksi_id}', [TransaksiController::class, 'show']);
+Route::put('/transaksiupdate/{transaksi_id}', [TransaksiController::class, 'update']);
+Route::delete('/transaksidelete/{category_id}', [TransaksiController::class, 'destroy']);
 
 
 

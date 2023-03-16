@@ -69,13 +69,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col d-flex flex-column vh-100">
+                <div class="col-12 col-sm-9 col-xl-10 d-flex flex-column vh-100">
                     <main class="row overflow-auto">
                         <div class="col pt-4">
                             @yield('content')
                         </div>
                     </main>
-                    <footer class="row bg-light py-4 mt-auto">
+                    <footer class="row bg-light py-2 mb-1">
                         <div class="col text-center"> made with <span class="text-danger"><i class="bi bi-pc-display-horizontal"></i></span> by <a href="https://giafn.github.io/">Gia Fauzan</a> </div>
                     </footer>
                 </div>
