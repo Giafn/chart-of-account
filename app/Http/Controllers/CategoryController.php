@@ -111,19 +111,20 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $account = Category::find($id);
-        $coa = Coa::where('category_id', $id);
-        $coa->delete();
-        $account->delete();
-
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'row deleted successfully!.',
-        ]); 
+        $coa = Coa::where('category_id', $id)->get()->count();
+        if($coa < 1){
+            $account->delete();
+            //return response
+            return response()->json([
+                'success' => true,
+                'message' => 'row deleted successfully!.',
+            ]); 
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'category data is still in use.',
+            ]); 
+        }
     }
 
-    public function test($id)
-    {
-        
-    }
 }

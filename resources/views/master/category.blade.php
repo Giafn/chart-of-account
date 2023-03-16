@@ -140,7 +140,7 @@
                   <div class="modal-body">
                     <div class="text-center mb-3">
                       <h5>Confirm Delete?</h5>
-                      <small>If this category is deleted, all accounts with the same category will be deleted</small>
+                      <small>data will not be deleted if there is still an account that uses it</small>
                     </div>
 
                       <div class="row justify-content-center mb-3">
@@ -301,7 +301,7 @@
   });
   
 
-  function deleteData(){
+  function deleteData(e){
     let id = $('#delete-id').val();
     let token   = $("meta[name='csrf-token']").attr("content");
 
@@ -314,9 +314,14 @@
           },
           success:function(response){ 
               //notifikasi
-              toastr.success(response.message, 'Success');
-              //refresh data on table
-              location.reload();
+              if(response.success == true){
+                toastr.success(response.message, 'Success');
+                //refresh data on table
+                location.reload();
+              }else{
+                toastr.error(response.message, 'Error!');
+                $('#modal-delete').modal('close');
+              }
           }
       });
         
