@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 Use App\Models\Coa;
 Use App\Models\Category;
+Use App\Models\Transaksi;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -20,7 +21,7 @@ class CoaController extends Controller
 
     public function index()
     {
-        $data = Coa::with('category')->paginate(10);
+        $data = Coa::with('category')->get();
         $db_category = Category::get();
         $i=0;
         $row = $db_category->count();
@@ -114,13 +115,23 @@ class CoaController extends Controller
     public function destroy($id)
     {
         //delete post by ID
-        Coa::where('id', $id)->delete();
-
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'row deleted successfully!.',
-        ]); 
+        $coa = Coa::find($id);
+        $transaksi = Transaksi::where('coa_id',$id)->get()->count();
+        //return response 
+        //cek transaksi
+        if($transaksi < 1){
+            $coa->delete();
+            //return response
+            return response()->json([
+                'success' => true,
+                'message' => 'row deleted successfully!.',
+            ]); 
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Account is still in use.',
+            ]); 
+        }
     }
 
 }

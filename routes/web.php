@@ -46,3 +46,8 @@ Route::delete('/transaksidelete/{category_id}', [TransaksiController::class, 'de
 
 
 
+
+
+
+
+Route::any('/report', [HomeController::class, 'report']);

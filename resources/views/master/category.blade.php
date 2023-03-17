@@ -10,47 +10,29 @@
                     <div class="card-body">
                         <table class="table" id="myTable">
                             <thead>
-                              <tr class="text-center">
-                                <th scope="col">#</th>
-                                <th scope="col">nama</th>
-                                <th scope="col">Type +</th>
-                                <th scope="col">Action</th>
+                              <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col" class="text-center">nama</th>
+                                <th scope="col" class="text-center">Type +</th>
+                                <th scope="col" class="text-center">Action</th>
                               </tr>
                             </thead>
                             <tbody id="tablebody">
-                              @php 
-                              if($data->currentPage() == 1){
-                                $i= ($data->currentPage()-1) * ($data->perPage() + 1)+1;
-                              }else{
-                                $i= ($data->currentPage()-1) * ($data->perPage() + 1);
-                              }
-                              @endphp
                               @foreach ($data as $item)
                                   <tr class="text-center" id="{{'index_'.$item->id}}">
-                                    <th scope="row" id="nomor_{{$item->id}}">{{$i}}</th>
+                                    <th scope="row" id="nomor_{{$item->id}}" class="number"></th>
                                     <td>{{ $item->nama}}</td>
                                     <td>@if($item->indicator == 1) Debit @else Kredit @endif</td>
                                     <td>
-                                        <button class="btn btn-sm btn-warning" id="btn-edit" data-id="{{$item->id}}" data-no="{{$i}}"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-danger" id="btn-delete" data-id="{{$item->id}}"><i class="bi bi-trash2"></i></button>
+                                      <div class="d-flex flex-row justify-content-center">
+                                        <button class="btn btn-sm btn-warning m-1" id="btn-edit" data-id="{{$item->id}}"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger m-1" id="btn-delete" data-id="{{$item->id}}"><i class="bi bi-trash2"></i></button>
+                                      </div>
                                     </td>
                                   </tr>
-                                  @php
-                                      $i++;
-                                  @endphp
                               @endforeach
                             </tbody>
                           </table>
-                    </div>
-                    <div class="row mx-3 my-3">
-                      <div class="col-md-6">
-                        <p> All data {{$data->total()}} - Page {{$data->currentPage()}}</p>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="pagination float-end">
-                          {{ $data->links('vendor\pagination\bootstrap-4') }}
-                        </div>
-                      </div>
                     </div>
                 </div>
             </div>
@@ -148,7 +130,7 @@
                           <form>
                             @csrf
                             <input type="hidden" name="delete-id" id="delete-id">
-                            <button class="btn btn-danger" id="confirm-delete" onclick="deleteData()">Delete</button>
+                            <a class="btn btn-danger" id="confirm-delete" onclick="deleteData()">Delete</a>
                           </form>
                         </div>
                         <div class="col-6 text-start">
@@ -163,6 +145,16 @@
 
 @push('js')
 <script>
+  $(document).ready( function () {
+      $('#myTable').DataTable();
+  });
+
+  $("#myTable").on('draw.dt', function(){
+    let n = 0;
+    $(".number").each(function () {
+            $(this).html(++n);
+        })
+  })
 
   $('#store').click(function(e) {
         e.preventDefault();
@@ -316,16 +308,13 @@
               //notifikasi
               if(response.success == true){
                 toastr.success(response.message, 'Success');
-                //refresh data on table
                 location.reload();
               }else{
                 toastr.error(response.message, 'Error!');
-                $('#modal-delete').modal('close');
+                $('#modal-delete').modal('toggle');
               }
           }
       });
-        
-
   }
 
  

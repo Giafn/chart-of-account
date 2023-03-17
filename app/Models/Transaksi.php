@@ -12,8 +12,7 @@ class Transaksi extends Model
     protected $fillable = [
         'coa_id',
         'desc',
-        'debit',
-        'credit',
+        'nominal',
         'created_at',
     ];
 

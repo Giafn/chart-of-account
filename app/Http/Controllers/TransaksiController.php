@@ -21,7 +21,7 @@ class TransaksiController extends Controller
     public function index()
     {
         // return view('transaksi');
-        $data = Transaksi::with('coa')->paginate(15);
+        $data = Transaksi::with('coa')->get();
         $db_coa = Coa::get();
         $i=0;
         $row = $db_coa->count();

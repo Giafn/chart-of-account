@@ -9,9 +9,9 @@
                 <div class="card my-3">
                     <div class="card-body">
                       <div class="table-responsive">
-                        <table class="table">
+                        <table class="table" id="myTable">
                             <thead>
-                              <tr class="text-center">
+                              <tr>
                                 <th scope="col">Tanggal</th>
                                 <th scope="col">COA Code</th>
                                 <th scope="col">COA nama</th>
@@ -54,16 +54,6 @@
                               @endforelse
                             </tbody>
                         </table>
-                      </div>
-                    </div>
-                    <div class="row mx-3 my-3">
-                      <div class="col-md-6">
-                        <p> All data {{$data->total()}} - Page {{$data->currentPage()}}</p>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="pagination float-end">
-                          {{ $data->links('vendor\pagination\bootstrap-4') }}
-                        </div>
                       </div>
                     </div>
                 </div>
@@ -176,6 +166,9 @@
 
 @push('js')
     <script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    });
 
     $('#store').click(function(e) {
             e.preventDefault();
