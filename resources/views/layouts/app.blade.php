@@ -7,8 +7,7 @@
         <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container text-center">
                 <a class="navbar-brand fw-bold w-100" href="{{ url('/') }}">
-                    {{-- {{ config('app.name', 'Laravel') }} --}}
-                    Halu<span class="text-primary">Corp <i class="bi bi-archive-fill"></i></i></span>
+                    Account<span class="text-primary">Chart <i class="bi bi-archive-fill"></i></i></span>
                 </a>
             </div>
         </nav>
@@ -21,7 +20,7 @@
                 <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex sticky-top">
                     <div class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 pt-2 text-white">
                         <a href="/" class="fs-5 fw-bold d-flex align-items-center pb-sm-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                            Halu<span class="text-primary">Corp <i class="bi bi-archive-fill"></i></i></span>
+                            Account<span class="text-primary">Chart <i class="bi bi-archive-fill"></i></i></span>
                         </a>
                         <ul class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start" id="menu">
                             <li>
@@ -31,6 +30,10 @@
                             <li>
                                 <a href="{{ url('/transaksi') }}"class="nav-link px-2 my-2 @if(Route::is('transaksi')) active @endif ">
                                     <i class="bi bi-wallet2"></i><span class="ms-1 d-none d-sm-inline">Transaksi</span> </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/report') }}"class="nav-link px-2 my-2 @if(Route::is('report')) active @endif ">
+                                <i class="bi bi-wallet2"></i><span class="ms-1 d-none d-sm-inline">Report</span> </a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle px-2 @if(Route::is('master.*')) active @endif " id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">

@@ -6,7 +6,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Chart Of Account | Testing</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -32,6 +32,9 @@
         #toast-container .toast-close-button:hover{
             filter:drop-shadow(.1rem .1rem .3rem #e23) !important;
 
+        }
+        ul > li .nav-link{
+            color: aliceblue;
         }
     </style>
 </head>

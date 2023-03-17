@@ -93,12 +93,12 @@
     @if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1)
     <div class="col-md-6">
         <table class="table">
-                <tr bgcolor='#87AFC6' id='head'>
+                <tr class="bg-primary text-white" id='head'>
                     <th>Category</th>
                     @php
                         $date=date_create($perbulan[$i]);
                     @endphp
-                    <th>{{date_format($date,'Y-m')}} <br> amount(RP)</th>
+                    <th>{{date_format($date,'Y-m')}} <br> Amount(Rp)</th>
                 </tr>
                 @foreach ($data[$perbulan[$i]][0] as $item)
                 <tr>
@@ -188,7 +188,7 @@
         @php
                 $date=date_create($perbulan[$i]);
         @endphp
-        <td><b>{{date_format($date,'Y-m')}} <br> amount(RP)</b></td>
+        <td><b>{{date_format($date,'Y-m')}} <br> Amount(Rp)</b></td>
         @foreach ($data[$perbulan[$i]][0] as $item)
         <td>{{number_format($item->amount)}}</td>
         @endforeach
@@ -261,7 +261,7 @@
     // export to exel
     function fnExcelReport()
     {
-        var tab_text="<table border='2px'><tr><th bgcolor='#87AFC6' colspan='{{$jumlahkolom*3}}'>Profit and Loss Data per {{$pertanggal}}</th></tr><tr>";
+        var tab_text="<table><tr><th bgcolor='#0d6efd' colspan='{{$jumlahkolom*3-1}}'><b style='color :#ffffff'>Profit and Loss Data per {{$pertanggal}}</b></th></tr><tr>";
         var textRange; var j=0;
         tab = document.getElementById('tabel'); // id of table
 

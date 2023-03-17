@@ -22,79 +22,20 @@
   </div>
   <div>
     <div class="row justify-content-center my-4 align-items-center">
-        <div class="col-lg-10">
+        <div class="col-lg-7">
             <canvas id="myChart"></canvas>
         </div>
-        <div class="col-md-12 text-center">
+        <div class="col-lg-5 text-center">
             <h4>Download profit and loss reports</h4>
-        </div>
-        <div class="col-12 text-center">
-            <button type="button" class="btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Download Reports
-            </button>
+
+            <a href="{{url('/report')}}" class="btn btn-lg btn-dark">
+                Go to Reports page
+            </a>
         </div>
     </div>
   </div>
 
-  {{-- modal download report --}}
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="{{url('admin/laporan/cetak')}}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label for="">Download Perbulan</label>
-                    <div class="row ">
-                        <div class="col-md-5">
-                            @php
-                                $bulan=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-                            @endphp
-                            <select name="bulan" class="form-control">
-                                <option value="" selected>Bulan</option>
-                                @for ($i = 0; $i < 12; $i++)
-                                <?php $index=$i+1; ?>
-                                <option value="{{$i+1}}" @if ($index == date('m')) selected @endif>{{$bulan[$i]}}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="col-md-5">
-                            @php
-                                $bulan=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-                            @endphp
-                            <select name="bulan" class="form-control">
-                                <option value="" selected>Bulan</option>
-                                @for ($i = 0; $i < 12; $i++)
-                                <?php $index=$i+1; ?>
-                                <option value="{{$i+1}}" @if ($index == date('m')) selected @endif>{{$bulan[$i]}}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="number" name="tahun" 
-                            class="form-control {{ $errors->has('tahun') ? 'is-invalid':'' }}"
-                            id="tahun"
-                            value="{{ date('Y') }}"
-                            placeholder="tahun">
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 2%">Download</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 @endsection
 
 @push('js')
@@ -129,7 +70,7 @@
             'rgb(54, 162, 235)',
             'rgb(255, 205, 86)'
             ],
-            hoverOffset: 4
+            hoverOffset: 0
             }]
     }});
   </script>

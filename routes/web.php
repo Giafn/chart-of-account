@@ -22,6 +22,8 @@ Auth::routes();
 
 // dahsboard
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::any('/report', [HomeController::class, 'report'])->name('report');
+
 
 // routing master Chart Of Account
 Route::get('/master/coa', [CoaController::class, 'index'])->name('master.COA');
@@ -45,9 +47,3 @@ Route::put('/transaksiupdate/{transaksi_id}', [TransaksiController::class, 'upda
 Route::delete('/transaksidelete/{category_id}', [TransaksiController::class, 'destroy']);
 
 
-
-
-
-
-
-Route::any('/report', [HomeController::class, 'report']);
