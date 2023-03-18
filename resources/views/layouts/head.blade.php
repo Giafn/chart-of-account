@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Chart Of Account | Testing</title>
+    <link rel="icon" href="{{ asset('img/favicon.png') }}" type="image/x-icon"/>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

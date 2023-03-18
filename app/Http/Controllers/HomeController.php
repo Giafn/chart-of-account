@@ -71,6 +71,23 @@ class HomeController extends Controller
         $bulan = (int)date('m');
         $tahun = (int)date('Y');
         $id = 1;
+
+        // bikin list kategory
+        $Category = Category::get()->all();
+        $in = 0;
+        $ex = 0;
+        foreach ($Category as $key) {
+            //untuk kategory type income
+            if($key->indicator == 0){
+                $listCategory['income'][$in] = $key->nama;
+                $in++;
+            }else{
+                $listCategory['expense'][$ex] = $key->nama;
+                $ex++;
+            }
+        }
+
+        // dd($listCategory);
         // $request = 'bulan-tahun';
         
         if (isset($request->search)) {
@@ -131,13 +148,13 @@ class HomeController extends Controller
                 $end = date('Y-m-t', strtotime( $datesatu ));
                 $data[$start][0] = Homecontroller::getDataAntara($start,$end,0);
                 $data[$start][1] = Homecontroller::getDataAntara($start,$end,1);
-                $perbulan[0] = $start;
+                $perbulan[0] = $start;//data nama bulan/tahun
             }
 
             $data['tahun'] = $tahun;
             $data['bulan'] = $bulan;
-            $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');
-            return view('export.export', compact('data','perbulan','pertanggal'));
+            $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');//kirim data per tanggal berapa
+            return view('export.export', compact('data','listCategory','perbulan','pertanggal'));
 
             // }//
 
@@ -173,7 +190,7 @@ class HomeController extends Controller
             $data['tahun'] = $tahun;
             $data['bulan'] = $bulan;
             $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');
-            return view('export.export', compact('data','perbulan','pertanggal'));
+            return view('export.export', compact('data','perbulan','pertanggal','listCategory'));
         }
 
 

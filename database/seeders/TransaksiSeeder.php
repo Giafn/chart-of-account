@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Transaksi;
+use Faker\Factory as Faker;
 
 class TransaksiSeeder extends Seeder
 {
@@ -14,6 +15,8 @@ class TransaksiSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker::create('id_ID');
+
         $coa_id = array(
             1,2,5
         );
@@ -38,5 +41,17 @@ class TransaksiSeeder extends Seeder
             ]);
             $i++;
         }
+
+        for($i = 1; $i <= 50; $i++){
+ 
+            // insert data ke table pegawai menggunakan Faker
+          Transaksi::insert([
+            'coa_id'	=> $faker->numberBetween(1, 8),
+            'desc'	=> $faker->sentence(3), 
+            'nominal'	=> $faker->numberBetween(30000, 5000000),
+            'created_at' => $faker->dateTimeBetween('-1 years', '+0 day')
+          ]);
+
+      }
     }
 }

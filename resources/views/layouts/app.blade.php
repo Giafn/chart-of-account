@@ -33,15 +33,15 @@
                             </li>
                             <li>
                                 <a href="{{ url('/report') }}"class="nav-link px-2 my-2 @if(Route::is('report')) active @endif ">
-                                <i class="bi bi-wallet2"></i><span class="ms-1 d-none d-sm-inline">Report</span> </a>
+                                <i class="bi bi-bookmarks"></i></i><span class="ms-1 d-none d-sm-inline">Report</span> </a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle px-2 @if(Route::is('master.*')) active @endif " id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-list-task"></i></i><span class="ms-1 d-none d-sm-inline">Master</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
-                                    <li><a class="dropdown-item" href="{{ url('/master/coa')}}">COA</a></li>
-                                    <li><a class="dropdown-item" href="{{ url('/master/category')}}">Kategori COA</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('/master/coa')}}">Account</a></li>
+                                    <li><a class="dropdown-item" href="{{ url('/master/category')}}">Kategori Account</a></li>
                                 </ul>
                             </li>
                         </ul>

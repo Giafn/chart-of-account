@@ -167,7 +167,9 @@
 @push('js')
     <script>
     $(document).ready( function () {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({
+          "ordering": false
+        });
     });
 
     $('#store').click(function(e) {
