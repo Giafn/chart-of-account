@@ -153,8 +153,14 @@ class HomeController extends Controller
 
             $data['tahun'] = $tahun;
             $data['bulan'] = $bulan;
-            $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');//kirim data per tanggal berapa
-            return view('export.export', compact('data','listCategory','perbulan','pertanggal'));
+
+            //kirim data per tanggal berapa
+            if($dateawal->format('Y-m') == $datdua->format('Y-m')){
+                $pertanggal = $dateawal->format('Y-m');
+            }else{
+                $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');
+            }
+            return view('export.export1', compact('data','listCategory','perbulan','pertanggal'));
 
             // }//
 
@@ -189,8 +195,12 @@ class HomeController extends Controller
 
             $data['tahun'] = $tahun;
             $data['bulan'] = $bulan;
-            $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');
-            return view('export.export', compact('data','perbulan','pertanggal','listCategory'));
+            if($dateawal->format('Y-m') == $datdua->format('Y-m')){
+                $pertanggal = $dateawal->format('Y-m');
+            }else{
+                $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');
+            }
+            return view('export.export1', compact('data','perbulan','pertanggal','listCategory'));
         }
 
 

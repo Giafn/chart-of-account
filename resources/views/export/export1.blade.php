@@ -8,7 +8,7 @@
         <h5 class="fw-bold mt-4">filter data</h5>
     </div>
     <div class="d-flex">
-        <div class="item">
+        <div class="item mx-1">
             <form action="{{url('/report')}}" method="POST">
                 @csrf
                 <input type="hidden" name="search" value="1">
@@ -41,7 +41,7 @@
                 </div>
             </form>
         </div>
-        <div class="item">
+        <div class="item mx-1">
             <form method="POST" action="{{url('/report')}}" enctype="multipart/form-data">
                 <input type="hidden" name="search" value="1">
                 <div class="row gy-3">
@@ -66,7 +66,7 @@
                 </div>
             </form>
         </div>
-        <div class="item">
+        <div class="item mx-1">
             <button class="btn btn-dark" id="btnExport" onclick="fnExcelReport();"> Export to Exel </button>
         </div>
     </div>
@@ -82,34 +82,27 @@
         return false;
     }
 
-    $maxrow = 0;
-    $jumlahkolom = 0;
-    for ($i = 0; $i < count($perbulan); $i++){
-        $row =4;
-        foreach ($data[$perbulan[$i]][0] as $item){
-            $row++;
-        }
-        foreach ($data[$perbulan[$i]][1] as $item){
-            $row++;
-        }
-        if ($maxrow < $row) {
-            $maxrow = $row;
-        }
-    }
+    $jmldata = 0;
 @endphp
+{{-- hitung jumlah data --}}
+@for ($i = 0; $i < count($perbulan); $i++) 
+    @if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1)
+        @php
+            $jmldata++;
+        @endphp
+    @endif
+@endfor
 
 
 <div class="row">
+    <div class="col-12">displaying data from {{$pertanggal}}</div>
     <div class="col">
-        <table class="table table-responsive" id="tabel">
+        <table class="table table-responsive @if($jmldata < 1) d-none @endif" id="tabel">
                 <tr>
-                    <th>Category</th>
+                    <th><b>Category</b></th>
                     @for ($i = 0; $i < count($perbulan); $i++) 
                         @if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1)
-                            <th>{{date('Y-m',strtotime($perbulan[$i]))}} <br>amount</th>
-                            @php
-                                $jumlahkolom++;
-                            @endphp
+                            <th><b>{{date('Y-m',strtotime($perbulan[$i]))}} <br>amount</b></th>
                         @endif
                     @endfor
                 </tr>
@@ -117,15 +110,17 @@
                 <tr>
                     <td>{{$listCategory['income'][$i]}}</td>
                     @for ($e = 0; $e < count($perbulan); $e++) 
+                        @php $h = $e @endphp
                         @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                             @if (count($data[$perbulan[$e]][0]) > 0)
                                 @foreach ($data[$perbulan[$e]][0] as $item)
                                 @if(in_array_r($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
                                     @if($item->category == $listCategory['income'][$i])
-                                        <td>Rp.{{number_format($item->amount)}}</td>
+                                        <td>{{number_format($item->amount)}}</td>
                                     @endif
-                                @else
+                                @elseif($e == $h)
                                     <td>0</td>
+                                    @php $h = -1 @endphp
                                 @endif
                                 @endforeach
                             @else
@@ -137,10 +132,10 @@
                 @endfor
                 
                 <tr>
-                    <th style="color: blue">Total Income</th>
+                    <th><b style="color: blue">Total Income</b></th>
                     @for ($e = 0; $e < count($perbulan); $e++) 
                     @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                    <th>Rp.{{number_format($data[$perbulan[$e]][0]->sum('amount'))}}</th>
+                    <th>{{number_format($data[$perbulan[$e]][0]->sum('amount'))}}</th>
                     @endif
                     @endfor
                 </tr>
@@ -149,15 +144,17 @@
                 <tr>
                     <td>{{$listCategory['expense'][$i]}}</td>
                     @for ($e = 0; $e < count($perbulan); $e++) 
+                        @php $h = $e @endphp
                         @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                             @if (count($data[$perbulan[$e]][1]) > 0)
                                 @foreach ($data[$perbulan[$e]][1] as $item)
                                 @if(in_array_r($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
                                     @if($item->category == $listCategory['expense'][$i])
-                                        <td>Rp.{{number_format($item->amount)}}</td>
+                                        <td>{{number_format($item->amount)}}</td>
                                     @endif
-                                @else
+                                @elseif($e == $h)
                                     <td>0</td>
+                                    @php $h = -1 @endphp
                                 @endif
                                 @endforeach
                             @else
@@ -169,10 +166,10 @@
                 @endfor
 
                 <tr>
-                    <th style="color: rgb(194, 132, 0)">Total Expense</th>
+                    <th><b style="color: rgb(194, 132, 0)">Total Expense</b></th>
                     @for ($e = 0; $e < count($perbulan); $e++) 
                     @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                    <th>Rp.{{number_format($data[$perbulan[$e]][1]->sum('amount'))}}</th>
+                    <th>{{number_format($data[$perbulan[$e]][1]->sum('amount'))}}</th>
                     @endif
                     @endfor
                 </tr>
@@ -183,24 +180,17 @@
                     @php
                         $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
                     @endphp
-                    <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>Rp.{{number_format($netincome)}}</th>
+                    <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{number_format($netincome)}}</th>
                     @endif
                     @endfor
                 </tr>
         </table>
     </div>
+    <div class="col-12 text-center my-4">
+        @if($jmldata < 1) <h4>No data available</h4> @endif
+    </div>
 </div>
 
-
-{{-- @if($data[$perbulan[$i]][0]->count() < count($listCategory['income']))
-                                        @php $t0 =  count($listCategory['income']) - $data[$perbulan[$i]][0]->count(); @endphp
-                                        @for ($t = 0; $t < $t0; $t++)
-                                            <td></td>
-                                        @endfor
-                                    @endif --}}
-
-
-{{-- tabel for exel --}}
     
     
 
@@ -208,10 +198,11 @@
 
 
  @push('js')
+ <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
  <script>
     // transpose table
      $(document).ready(function(){
-        if('{{$jumlahkolom}}' < 1){
+        if('{{$jmldata}}' < 1){
             $('#btnExport').prop('disabled', true);
         }
         if('{{$errors->first()}}'){
@@ -221,40 +212,13 @@
 
 
 
-
-    // export to exel
-    function fnExcelReport()
-    {
-        var tab_text="<table border='2px'><tr><th bgcolor='#0d6efd' colspan='{{$jumlahkolom+1}}'><b style='color :#ffffff'>Profit and Loss Data per {{$pertanggal}}</b></th></tr><tr>";
-        var textRange; var j=0;
-        tab = document.getElementById('tabel'); // id of table
-
-        for(j = 0 ; j < tab.rows.length ; j++) 
-        {     
-            tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
-            //tab_text=tab_text+"</tr>";
-        }
-
-        tab_text=tab_text+"</table>";
-        tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-        tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
-        tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
-
-        var ua = window.navigator.userAgent;
-        var msie = ua.indexOf("MSIE "); 
-
-        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
-        {
-            txtArea1.document.open("txt/html","replace");
-            txtArea1.document.write(tab_text);
-            txtArea1.document.close();
-            txtArea1.focus(); 
-            sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
-        }  
-        else                 //other browser not tested on IE 11
-            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
-
-        return (sa);
+    function fnExcelReport(){
+        $("#tabel").table2excel({
+            // exclude: ".excludeThisClass",
+            name: "Worksheet Name",
+            filename: "report-{{$pertanggal}}-coa.xls", // do include extension
+            preserveColors: true // set to true if you want background colors and font colors preserved
+        });
     }
  </script>
  @endpush
