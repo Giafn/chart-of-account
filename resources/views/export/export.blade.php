@@ -99,7 +99,7 @@
 @endfor
 
 
-<div class="row">
+<div class="row overflow-auto">
     <div class="col-12">displaying data from {{$pertanggal}}</div>
     <div class="col">
         <table class="table table-responsive @if($jmldata < 1) d-none @endif" id="tabel">
