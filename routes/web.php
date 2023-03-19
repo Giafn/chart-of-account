@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\CoaController;
 use App\Http\Controllers\CategoryController;
@@ -22,7 +23,9 @@ Auth::routes();
 
 // dahsboard
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::any('/report', [HomeController::class, 'report'])->name('report');
+
+//report
+Route::any('/report', [ReportController::class, 'index'])->name('report');
 
 
 // routing master Chart Of Account

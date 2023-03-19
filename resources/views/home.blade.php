@@ -9,14 +9,8 @@
 <div class="row align-items-md-stretch">
     <div class="col-md-12 my-2">
       <div class="h-100 p-5 text-white bg-dark rounded-3">
-        <h2>Profits this month</h2>
+        <h2>Profits of this month</h2>
         <h1 class="fw-bold">Rp{{number_format($Profitbulan)}}</h1>
-      </div>
-    </div>
-    <div class="col-md-12 my-2">
-      <div class="h-100 p-5 bg-light border rounded-3">
-        <h2>Profits this Year</h2>
-        <h1 class="fw-bold">Rp.{{number_format($Profittahun)}}</h1>
       </div>
     </div>
   </div>
@@ -49,8 +43,6 @@
         bulan[`{{$bln[1]-1}}`],
         bulan['{{$bln[2]-1}}'],
     ];
-    let i = 0;
-    let isi;
 
     
     new Chart(ctx, {
@@ -65,12 +57,10 @@
                 `{{$summonth[1]}}`, 
                 `{{$summonth[2]}}`,
             ],
-            backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 0
+            fill: false,
+            hoverOffset: 0,
+            borderColor: 'rgb(13 110 253)',
+            tension: 0.1
             }]
     }});
   </script>

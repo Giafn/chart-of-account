@@ -79,7 +79,7 @@
                         </div>
                     </main>
                     <footer class="row bg-light py-2 mb-1">
-                        <div class="col text-center"> made with <span class="text-danger"><i class="bi bi-pc-display-horizontal"></i></span> by <a href="https://giafn.github.io/">Gia Fauzan</a> </div>
+                        <div class="col text-center"> made by <a href="https://giafn.github.io/">Gia Fauzan</a> </div>
                     </footer>
                 </div>
             </div>
