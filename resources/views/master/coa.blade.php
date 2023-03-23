@@ -57,7 +57,7 @@
                         <div class="col-md-8">
                           <div class="mb-3">
                             <label class="form-label">Kode</label>
-                            <input type="text" class="form-control" id="add-kode" name="add-kode">
+                            <input type="text" class="form-control" value="-code generated automatically-" disabled>
                           </div>
                           <div class="mb-3">
                             <label class="form-label">Nama</label>
@@ -65,8 +65,7 @@
                           </div>
                           <div class="mb-3">
                             <label class="form-label">Category</label>
-                            <select id="add-category" class="form-select" name="add-category">
-                              <option value="null" disabled >-silahkan pilih-</option>
+                            <select id="add-category" class="form-select" name="add-category" placeholder="-silahkan pilih-">
                               @for($i = 0; $i < $row; $i++)
                               <option value="{{$category[$i]['id']}}">{{$category[$i]['nama']}}</option>
                               @endfor
@@ -98,7 +97,7 @@
                         <div class="col-md-8">
                           <div class="mb-3">
                             <label class="form-label">Kode</label>
-                            <input type="text" class="form-control" id="edit-kode" name="edit-kode">
+                            <input type="text" class="form-control" id='edit-kode' name="edit-kode" disabled>
                           </div>
                           <div class="mb-3">
                             <label class="form-label">Nama</label>
@@ -151,14 +150,29 @@
 @push('js')
 <script>
   $(document).ready( function () {
-    $('#myTable').DataTable();
+    let table = $('#myTable').DataTable();
+
+    $( '#add-category' ).select2( {
+      dropdownParent: $("#add-modal"),
+      theme: "bootstrap-5",
+      width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+      placeholder: $( this ).data( 'placeholder' ),
+    } );
+
+    $( '#edit-category' ).select2( {
+      dropdownParent: $("#modal-edit"),
+      theme: "bootstrap-5",
+      width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+      placeholder: $( this ).data( 'placeholder' ),
+    } );
   } );
+
+  
 
   $('#store').click(function(e) {
         e.preventDefault();
 
         //define variable
-        let addkode   = $('#add-kode').val();
         let addnama   = $('#add-nama').val();
         let addcategory   = $('#add-category').val();
         let token     = $("meta[name='csrf-token']").attr("content");
@@ -170,7 +184,6 @@
             type: "POST",
             cache: false,
             data: {
-                "kode": addkode,
                 "nama": addnama,
                 "category_id": addcategory,
                 "_token": token
@@ -187,9 +200,6 @@
 
             },
             error:function(error){
-              if(error.responseJSON.kode[0]){
-                  toastr.error(error.responseJSON.kode[0], 'Error!');
-                }
                 if(error.responseJSON.nama[0]){
                   toastr.error(error.responseJSON.nama[0], 'Error!');
                 }
@@ -212,7 +222,7 @@
               $('#edit-kode').val(response.data.kode);
               $('#edit-nama').val(response.data.nama);
               $('#edit-category').val(response.data.category_id);
-
+              $('#edit-category').trigger('change');
               //open modal
               $('#modal-edit').modal('show');
           }
@@ -224,7 +234,7 @@
 
         //define variable
         let id = $('#edit-id').val();
-        let kode   = $('#edit-kode').val();
+        // let kode   = $('#edit-kode').val();
         let nama   = $('#edit-nama').val();
         let category = $('#edit-category').val();
         let token   = $("meta[name='csrf-token']").attr("content");
@@ -236,7 +246,7 @@
             type: "PUT",
             cache: false,
             data: {
-                'kode': kode,
+                // 'kode': kode,
                 "nama": nama,
                 "category_id": category,
                 "_token": token
@@ -263,14 +273,17 @@
 
                 //close modal
                 $('#modal-edit').modal('hide');
+                if(response.refresh == 1){
+                  location.reload();
+                }
                 
 
             },
             error:function(error){
 
-                if(error.responseJSON.kode[0]) {
-                  toastr.error(error.responseJSON.kode[0], 'Error!');
-                } 
+                // if(error.responseJSON.kode[0]) {
+                //   toastr.error(error.responseJSON.kode[0], 'Error!');
+                // } 
                 
                 if(error.responseJSON.nama[0]) {
 

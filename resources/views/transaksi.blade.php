@@ -5,7 +5,10 @@
                 <div class="title mb-4 text-center">
                     <h3 class="fw-bold">Transaksi</h3>
                 </div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">Tambah Transaksi</button>
+                <div class="d-flex justify-content-between">
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">Tambah Transaksi</button>
+                  <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal-export">Export</a>
+                </div>
                 <div class="card my-3">
                     <div class="card-body">
                       <div class="table-responsive">
@@ -69,7 +72,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <h5 class="text-center">Tambah Account</h5>
+                    <h5 class="text-center">Tambah Transaksi</h5>
                     <form>
                       @csrf
                       <div class="row justify-content-center mb-3">
@@ -108,7 +111,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <h5 class="text-center">Tambah Account</h5>
+                    <h5 class="text-center">Edit Transaksi</h5>
                     <form>
                       <input type="hidden" name="id" id='edit-id'>
                       @csrf
@@ -162,6 +165,25 @@
                 </div>
               </div>
             </div>
+
+
+            {{-- modal export --}}
+            <div class="modal fade" tabindex="-1" id="modal-export">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>This action will only export the page that is displayed in the table, please adjust the table view, if it has been adjusted, please click export</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a type="button" class="btn btn-primary" id="btnExport">Export</a>
+                  </div>
+                </div>
+              </div>
+            </div>
 @endsection
 
 @push('js')
@@ -170,6 +192,20 @@
         $('#myTable').DataTable({
           "ordering": false
         });
+
+        $( '#add-coa_id' ).select2( {
+          dropdownParent: $("#add-modal"),
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+        } );
+
+        $( '#edit-coa_id' ).select2( {
+          dropdownParent: $("#modal-edit"),
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+        } );
     });
 
     $('#store').click(function(e) {
@@ -232,6 +268,7 @@
             success:function(response){
                 $('#edit-id').val(response.data.id);
                 $('#edit-coa_id').val(response.data.coa_id);
+                $('#edit-coa_id').trigger('change');
                 $('#edit-desc').val(response.data.desc);
                 $('#edit-nominal').val(response.data.nominal);
 
@@ -373,6 +410,35 @@
       // return result with - sign if negative
       return sign < 0 ? '-' + num : num;
     }
+
+
+    //export page table xls
+    $(document).on('click','#btnExport',function() {
+
+          var tab_text="<table border = '2px'><tr>";
+          var textRange; var j=0;
+          tab = document.getElementById('myTable');
+
+          for(j = 0 ; j < tab.rows.length ; j++) 
+          {     
+              tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+          }
+
+          tab_text=tab_text+"</table>";
+          tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+          tab_text= tab_text.replace(/<img[^>]*>/gi,""); 
+          tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); 
+
+          var ua = window.navigator.userAgent;
+          var msie = ua.indexOf("MSIE "); 
+
+          var result = 'data:application/vnd.ms-excel,' + encodeURIComponent(tab_text);
+          var link = document.createElement("a");
+          document.body.appendChild(link);
+          link.download = "transaksi-{{date('Y/m/d')}}-coa.xls"; //namafile nya
+          link.href = result;
+          link.click();
+    });
 
     </script>
 @endpush
