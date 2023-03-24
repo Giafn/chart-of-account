@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
 <div class="row justify-content-center p-3 gy-2 align-items-center">
     <div class="col-12">
         <h3 class="fw-bold">Report Page</h3>
@@ -100,7 +99,7 @@
 
 
 <div class="row overflow-auto">
-    <div class="col-12">displaying data from {{$pertanggal}}</div>
+    <div class="col-12 my-3 h5">displaying data from {{$pertanggal}}</div>
     <div class="col">
         <table class="table table-responsive @if($jmldata < 1) d-none @endif" id="tabel">
                 <tr>
