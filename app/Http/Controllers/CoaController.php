@@ -58,7 +58,7 @@ class CoaController extends Controller
         $kode = Coa::whereHas('category', function($q){
             global $getType;
             $q->where('indicator', $getType);
-        })->get()->max('kode');
+        })->get()->max('kode')+1;
 
         // return response()->json($kode, 422);
 
