@@ -48,5 +48,6 @@ Route::post('/add-transaksi', [TransaksiController::class, 'store']);
 Route::get('/transaksi/{transaksi_id}', [TransaksiController::class, 'show']);
 Route::put('/transaksiupdate/{transaksi_id}', [TransaksiController::class, 'update']);
 Route::delete('/transaksidelete/{category_id}', [TransaksiController::class, 'destroy']);
+Route::post('/transaksifilter', [TransaksiController::class, 'index']);
 
 

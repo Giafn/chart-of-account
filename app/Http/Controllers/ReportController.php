@@ -71,11 +71,11 @@ class ReportController extends Controller
             }
             // dd($request);
             $dateawal =date_create($date1)->modify('first day of this month');
-            $datdua =date_create($date2)->modify('last day of this month');
+            $datedua =date_create($date2)->modify('last day of this month');
     
             $datesatu = $dateawal->format('Y-m-d');//berformat YMD
 
-            $interval = date_diff($dateawal, $datdua)->m + (date_diff($dateawal, $datdua)->y * 12); 
+            $interval = date_diff($dateawal, $datedua)->m + (date_diff($dateawal, $datedua)->y * 12); 
 
             if($interval > 0){
                 for($i = 0; $i < $interval; $i ++){
@@ -100,10 +100,10 @@ class ReportController extends Controller
             $data['bulan'] = $bulan;
 
             //kirim data per tanggal berapa
-            if($dateawal->format('Y-m') == $datdua->format('Y-m')){
+            if($dateawal->format('Y-m') == $datedua->format('Y-m')){
                 $pertanggal = $dateawal->format('Y-m');
             }else{
-                $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');
+                $pertanggal = $dateawal->format('Y-m').' to '.$datedua->format('Y-m');
             }
             return view('export.export', compact('data','listCategory','perbulan','pertanggal'));
 
@@ -112,11 +112,11 @@ class ReportController extends Controller
         }else{
             $now = date("Y-m-d");
             $dateawal =date_create($now)->modify('first day of this month');
-            $datdua =date_create($now)->modify('last day of this month');
+            $datedua =date_create($now)->modify('last day of this month');
     
             $datesatu = $dateawal->format('Y-m-d');//berformat YMD
 
-            $interval = date_diff($dateawal, $datdua)->m + (date_diff($dateawal, $datdua)->y * 12); 
+            $interval = date_diff($dateawal, $datedua)->m + (date_diff($dateawal, $datedua)->y * 12); 
 
             if($interval > 0){
                 for($i = 0; $i < $interval; $i ++){
@@ -139,10 +139,10 @@ class ReportController extends Controller
 
             $data['tahun'] = $tahun;
             $data['bulan'] = $bulan;
-            if($dateawal->format('Y-m') == $datdua->format('Y-m')){
+            if($dateawal->format('Y-m') == $datedua->format('Y-m')){
                 $pertanggal = $dateawal->format('Y-m');
             }else{
-                $pertanggal = $dateawal->format('Y-m').' to '.$datdua->format('Y-m');
+                $pertanggal = $dateawal->format('Y-m').' to '.$datedua->format('Y-m');
             }
             return view('export.export', compact('data','perbulan','pertanggal','listCategory'));
         }

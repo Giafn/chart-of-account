@@ -18,11 +18,29 @@ class TransaksiController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         // return view('transaksi');
-        $data = Transaksi::with('coa')->orderBy('created_at', 'desc')->get();
-        $db_coa = Coa::get();
+        // dd($request);
+        $fromtanggal = null;
+        if(isset($request->search)){
+            $start = $request->startdate;
+            $end = $request->enddate;
+
+            $data = Transaksi::with('coa')->orderBy('created_at', 'desc')->whereBetween('created_at',[$start,$end])->get();
+            $fromtanggal['start'] = $start;
+            $fromtanggal['end'] = $end;
+        }else{
+            $data = Transaksi::with('coa')->orderBy('created_at', 'desc')->get();
+        }
+        $db_coa = Coa::with('category')->get();
+        $ctgr = Category::get();
+        $i=0;
+        foreach($ctgr as $items){
+
+            $category[$i] = $items->nama;
+            $i++;
+        }
         $i=0;
         $row = $db_coa->count();
         foreach($db_coa as $items){
@@ -30,13 +48,14 @@ class TransaksiController extends Controller
                 'id' => $items->id,
                 'kode' => $items->kode,
                 'nama' => $items->nama,
-                'category_id' => $items->category_id
+                'category_id' => $items->category_id,
+                'nama_category' => $items->category->nama
             );
             $i++;
         }
 
         // dd($data);
-        return view('transaksi', compact('data','coa','row'));
+        return view('transaksi', compact('data','coa','row','category', 'fromtanggal'));
     }
 
     public function store(Request $request)

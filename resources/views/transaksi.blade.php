@@ -9,6 +9,40 @@
                   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">Tambah Transaksi</button>
                   <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal-export">Export</a>
                 </div>
+                <div class="row justify-content-center mt-4">
+                  <div class="col-10 card p-2">
+                    <form method="POST" action="{{url('/transaksifilter')}}" enctype="multipart/form-data">
+                        <input type="hidden" name="search" value="1">
+                        <div class="row justify-content-center gy-3">
+                            @csrf
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <input type="date" class="form-control {{ $errors->has('startdate') ? 'is-invalid':'' }}" name="startdate"
+                                    placeholder="Dari Tanggal"
+                                    @if(isset($fromtanggal))
+                                      value="{{$fromtanggal['start']}}"
+                                    @endif
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <input type="date" class="form-control {{ $errors->has('enddate') ? 'is-invalid':'' }}" name="enddate"
+                                    placeholder="Sampai Tanggal"
+                                    @if(isset($fromtanggal))
+                                      value="{{$fromtanggal['end']}}"
+                                    @endif
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-lg-4 d-flex">
+                                <button class="btn btn-dark mx-1" type="submit" name="action"><i class="bi bi-search"></i></button>
+                                <a class="btn btn-dark mx-1" href="{{url('/transaksi')}}"><i class="bi bi-arrow-clockwise"></i></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                </div>
                 <div class="card my-3">
                     <div class="card-body">
                       <div class="table-responsive">
@@ -18,6 +52,7 @@
                                 <th scope="col">Tanggal</th>
                                 <th scope="col">COA Code</th>
                                 <th scope="col">COA nama</th>
+                                <th scope="col">category nama</th>
                                 <th scope="col">Desc</th>
                                 <th scope="col">Debit</th>
                                 <th scope="col">Credit</th>
@@ -30,6 +65,7 @@
                                 <td>{{date_format($item->created_at,"d/m/Y")}}</td>
                                 <td>{{$item->coa->kode}}</td>
                                 <td>{{$item->coa->nama}}</td>
+                                <td>{{$item->coa->category->nama}}</td>
                                 <td>{{$item->desc}}</td>
                                 <td>@if ($item->coa->category->indicator == 1)
                                   Rp.{{number_format($item->nominal)}}
@@ -81,9 +117,17 @@
                             <label class="form-label">Nama Account</label>
                             <select id="add-coa_id" class="form-select" name="add-coa_id">
                               <option value="null" disabled >-silahkan pilih-</option>
-                              @for($i = 0; $i < $row; $i++)
-                              <option value="{{$coa[$i]['id']}}">{{$coa[$i]['nama']}}</option>
+                              @for($i = 0; $i < count($category); $i++)
+                                <optgroup label="{{$category[$i]}}">
+                                  @for($p = 0; $p < $row; $p++)
+                                    @if($category[$i] == $coa[$p]['nama_category'])
+                                    <option value="{{$coa[$p]['id']}}">{{$coa[$p]['kode']}}-{{$coa[$p]['nama']}}</option>
+                                    @endif
+                                  @endfor
+                                </optgroup>
                               @endfor
+                              
+                              
                             </select>
                           </div>
                           <div class="mb-3">
