@@ -35,7 +35,7 @@
                                     >
                                 </div>
                             </div>
-                            <div class="col-lg-4 d-flex">
+                            <div class="col-lg-2 d-flex">
                                 <button class="btn btn-dark mx-1" type="submit" name="action"><i class="bi bi-search"></i></button>
                                 <a class="btn btn-dark mx-1" href="{{url('/transaksi')}}"><i class="bi bi-arrow-clockwise"></i></a>
                             </div>
@@ -63,17 +63,17 @@
                               @forelse ($data as $item)
                               <tr class="text-center" id="index_{{$item->id}}">
                                 <td>{{date_format($item->created_at,"d/m/Y")}}</td>
-                                <td>{{$item->coa->kode}}</td>
-                                <td>{{$item->coa->nama}}</td>
-                                <td>{{$item->coa->category->nama}}</td>
+                                <td>{{$item->kode}}</td>
+                                <td>{{$item->nama_coa}}</td>
+                                <td>{{$item->category}}</td>
                                 <td>{{$item->desc}}</td>
-                                <td>@if ($item->coa->category->indicator == 1)
+                                <td>@if ($item->indicator == 1)
                                   Rp.{{number_format($item->nominal)}}
                                 @else
                                     0
                                 @endif
                                 </td>
-                                <td>@if ($item->coa->category->indicator == 0)
+                                <td>@if ($item->indicator == 0)
                                   Rp.{{number_format($item->nominal)}}
                                 @else
                                     0
@@ -165,8 +165,14 @@
                             <label class="form-label">Nama Account</label>
                             <select id="edit-coa_id" class="form-select" name="edit-coa_id">
                               <option value="null" disabled >-silahkan pilih-</option>
-                              @for($i = 0; $i < $row; $i++)
-                              <option value="{{$coa[$i]['id']}}">{{$coa[$i]['nama']}}</option>
+                              @for($i = 0; $i < count($category); $i++)
+                                <optgroup label="{{$category[$i]}}">
+                                  @for($p = 0; $p < $row; $p++)
+                                    @if($category[$i] == $coa[$p]['nama_category'])
+                                    <option value="{{$coa[$p]['id']}}">{{$coa[$p]['kode']}}-{{$coa[$p]['nama']}}</option>
+                                    @endif
+                                  @endfor
+                                </optgroup>
                               @endfor
                             </select>
                           </div>
@@ -365,7 +371,8 @@
                       <tr id="index_${response.id}">
                           <td class="text-center">${response.tanggal}</td>
                           <td class="text-center">${response.kode}</td>
-                          <td class="text-center">${response.nama}</td>
+                          <td class="text-center">${response.nama_coa}</td>
+                          <td class="text-center">${response.nama_category}</td>
                           <td class="text-center">${response.desc}</td>
                           <td class="text-center">${debit}</td>
                           <td class="text-center">${credit}</td>

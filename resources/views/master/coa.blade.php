@@ -14,6 +14,7 @@
                                 <th scope="col"class="text-center">Kode</th>
                                 <th scope="col"class="text-center">Nama</th>
                                 <th scope="col"class="text-center">Category</th>
+                                <th scope="col"class="text-center">Type</th>
                                 <th scope="col"class="text-center">Action</th>
                               </tr>
                             </thead>
@@ -22,8 +23,8 @@
                                   <tr class="text-center" id="{{'index_'.$item->id}}">
                                     <td scope="row" id="nomor_{{$item->id}}">{{ $item->kode}}</td>
                                     <td>{{ $item->nama}}</td>
-                                    <td>{{ $item->category->nama}}</td>
-                                    {{-- <td>@if($item->indicator == 1) Debit @else Kredit @endif</td> --}}
+                                    <td>{{ $item->category}}</td>
+                                    <td>@if($item->indicator == 1) Debit @else Kredit @endif</td>
                                     <td>
                                       <div class="d-flex flex-row justify-content-center">
                                         <button class="btn btn-sm btn-warning m-1" id="btn-edit" data-id="{{$item->id}}"><i class="bi bi-pencil"></i></button>
@@ -66,8 +67,18 @@
                           <div class="mb-3">
                             <label class="form-label">Category</label>
                             <select id="add-category" class="form-select" name="add-category" placeholder="-silahkan pilih-">
-                              @for($i = 0; $i < $row; $i++)
-                              <option value="{{$category[$i]['id']}}">{{$category[$i]['nama']}}</option>
+                              @php
+                                  $typecategory[0] = 'Credit';
+                                  $typecategory[1] = 'Debit';
+                              @endphp
+                              @for($f = 0; $f < 2; $f++)
+                                <optgroup label="type - {{$typecategory[$f]}}">
+                                  @for($i = 0; $i < $row; $i++)
+                                    @if ($category[$i]['indicator'] == $f)
+                                    <option value="{{$category[$i]['id']}}">{{$category[$i]['nama']}}</option>
+                                    @endif
+                                  @endfor
+                                </optgroup>
                               @endfor
                             </select>
                           </div>
@@ -107,8 +118,14 @@
                             <label class="form-label">Kategori</label>
                             <select id="edit-category" class="form-select" name="edit-category">
                               <option disabled value="null">-pilih-</option>
-                              @for($i = 0; $i < $row; $i++)
-                              <option value="{{$category[$i]['id']}}">{{$category[$i]['nama']}}</option>
+                              @for($f = 0; $f < 2; $f++)
+                                <optgroup label="type - {{$typecategory[$f]}}">
+                                  @for($i = 0; $i < $row; $i++)
+                                    @if ($category[$i]['indicator'] == $f)
+                                    <option value="{{$category[$i]['id']}}">{{$category[$i]['nama']}}</option>
+                                    @endif
+                                  @endfor
+                                </optgroup>
                               @endfor
                             </select>
                           </div>
@@ -256,11 +273,18 @@
                 toastr.success(response.message, 'Success');
 
                 //data post
+                let type;
+                if(response.type == 0){
+                  type = "Kredit";
+                }else if(response.type == 1){
+                  type = "Debit";
+                }
                 let data1 = `
                     <tr id="index_${response.id}">
                         <td class="text-center">${response.kode}</td>
                         <td class="text-center">${response.nama}</td>
                         <td class="text-center">${response.category}</td>
+                        <td class="text-center">${type}</td>
                         <td class="text-center">
                           <button class="btn btn-sm btn-warning" id="btn-edit" data-id="${response.id}"><i class="bi bi-pencil"></i></button>
                           <button class="btn btn-sm btn-danger" id="btn-delete" data-id="${response.id}"><i class="bi bi-trash2"></i></button>

@@ -11,7 +11,7 @@
                         <table class="table" id="myTable">
                             <thead>
                               <tr>
-                                <th scope="col" class="text-center">#</th>
+                                {{-- <th scope="col" class="text-center">#</th> --}}
                                 <th scope="col" class="text-center">nama</th>
                                 <th scope="col" class="text-center">Type +</th>
                                 <th scope="col" class="text-center">Action</th>
@@ -20,7 +20,7 @@
                             <tbody id="tablebody">
                               @foreach ($data as $item)
                                   <tr class="text-center" id="{{'index_'.$item->id}}">
-                                    <th scope="row" id="nomor_{{$item->id}}" class="number"></th>
+                                    {{-- <th scope="row" id="nomor_{{$item->id}}" class="number"></th> --}}
                                     <td>{{ $item->nama}}</td>
                                     <td>@if($item->indicator == 1) Debit @else Kredit @endif</td>
                                     <td>
@@ -38,7 +38,6 @@
             </div>
             
             
-            {{-- <div id="result" class="d-none"></div> --}}
 
             <!-- Modal add-->
             <div class="modal fade" id="add-modal" tabindex="-1" aria-labelledby="add-modalLabel" aria-hidden="true">
@@ -81,12 +80,10 @@
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-header">
-                    {{-- <h1 class="modal-title fs-5 " id="add-modalLabel">Modal title</h1> --}}
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <h5 class="text-center">Edit Kategori</h5>
-                    {{-- <form action="/add-category" method="POST"> --}}
                     <form>
                       @csrf
                       <input type="hidden" name="id" id="edit-id">
@@ -146,7 +143,9 @@
 @push('js')
 <script>
   $(document).ready( function () {
-      $('#myTable').DataTable();
+      $('#myTable').DataTable({
+        order: [[1, 'desc']],
+      });
   });
 
   $("#myTable").on('draw.dt', function(){
@@ -248,7 +247,6 @@
                 //data post
                 let data1 = `
                     <tr id="index_${response.id}">
-                        <td class="fw-bold text-center">${response.nomor}</td>
                         <td class="text-center">${response.nama}</td>
                         <td class="text-center">${response.type}</td>
                         <td class="text-center">

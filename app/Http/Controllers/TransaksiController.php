@@ -20,41 +20,68 @@ class TransaksiController extends Controller
 
     public function index(Request $request)
     {
-        // return view('transaksi');
-        // dd($request);
-        $fromtanggal = null;
+        $fromtanggal = null; //
+
+        $getdata = Transaksi::select('transaksi.*','transaksi.nominal','coa.kode AS kode','coa.nama AS nama_coa','categories.nama AS category','categories.indicator AS indicator')
+                            ->join('coa','coa.id','=','transaksi.coa_id')
+                            ->join('categories','categories.id','=','coa.category_id')
+                            ->orderBy('transaksi.created_at', 'desc');
+
         if(isset($request->search)){
+
+            $validator = Validator::make($request->all(), [
+                'startdate'   => 'required',
+                'enddate'   => 'required'
+            ]);
+    
+            //check if validation fails
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
             $start = $request->startdate;
             $end = $request->enddate;
 
-            $data = Transaksi::with('coa')->orderBy('created_at', 'desc')->whereBetween('created_at',[$start,$end])->get();
+            $data =  $getdata->whereBetween('transaksi.created_at',[$start,$end])//where kalo filter
+                    ->get();
+
             $fromtanggal['start'] = $start;
             $fromtanggal['end'] = $end;
+            
         }else{
-            $data = Transaksi::with('coa')->orderBy('created_at', 'desc')->get();
+            $data =  $getdata->get();
         }
-        $db_coa = Coa::with('category')->get();
+
+
+    // untuk select category optgroup
+        $db_coa = Coa::select('coa.*','categories.nama AS category')
+                        ->join('categories','categories.id','=','coa.category_id')
+                        ->get();
+
         $ctgr = Category::get();
         $i=0;
         foreach($ctgr as $items){
-
             $category[$i] = $items->nama;
             $i++;
         }
+
         $i=0;
         $row = $db_coa->count();
+
         foreach($db_coa as $items){
             $coa[$i] = array(
                 'id' => $items->id,
                 'kode' => $items->kode,
                 'nama' => $items->nama,
                 'category_id' => $items->category_id,
-                'nama_category' => $items->category->nama
+                'nama_category' => $items->category
             );
             $i++;
         }
+    //
 
-        // dd($data);
         return view('transaksi', compact('data','coa','row','category', 'fromtanggal'));
     }
 
@@ -117,17 +144,21 @@ class TransaksiController extends Controller
             'desc'     => $request->desc, 
             'nominal'   => $request->nominal
         ]);
-        $db = Transaksi::where('id', $id)->with('coa')->first();
+        $db = Transaksi::select('transaksi.*','coa.*','coa.nama AS nama_coa','categories.*')
+                        ->join('coa','coa.id','=','transaksi.coa_id')
+                        ->join('categories','categories.id','=','coa.category_id')
+                        ->where('transaksi.id', $id)->first();
+        // dd($db);
         $tanggal = date_format($db->created_at,"d/m/Y");
-        $nama = $db->coa->nama;
-        $kode = $db->coa->kode;
-        $category = $db->coa->category->indicator;
+        $kode = $db->kode;
+        $category = $db->indicator;
 
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diudapte!',
             'tanggal' => $tanggal,
-            'nama' => $nama,
+            'nama_coa' => $db->nama_coa,
+            'nama_category' => $db->nama,
             'kode' => $kode,
             'category' => $category,
             'desc' => $request->desc,

@@ -15,15 +15,9 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        
-        $bulan = (int)date('m');
-        $tahun = (int)date('Y');
-        $id = 1;
-
         // bikin list kategory
         $Category = Category::get()->all();
-        $in = 0;
-        $ex = 0;
+        $in = 0; $ex = 0;
         foreach ($Category as $key) {
             //untuk kategory type income
             if($key->indicator == 0){
@@ -38,7 +32,7 @@ class ReportController extends Controller
         // kalo ada filter
         if (isset($request->search)) {
 
-            if(isset($request->month) | isset($request->years)){
+            if(isset($request->month) | isset($request->years)){//kalo pake search bulan dan tahun
                 $validator = Validator::make($request->all(), [
                     'month' => 'required',
                     'years' => 'required',
@@ -50,12 +44,12 @@ class ReportController extends Controller
                                 ->withInput();
                 }
 
-                $month1 = $request->month;
-                $year1 = $request->years;
+                // formatting data asalnya dari request dua variable jadi satuin menjadi string tanggal
+                $date1 = $request->years.'-'.$request->month.'-01';
+                $date2 = $request->years.'-'.$request->month.'-01';
 
-                $date1 = $year1.'-'.$month1.'-01';
-                $date2 = $year1.'-'.$month1.'-01';
-            }else{
+            }else{ //kalo pake search yang range
+
                 $validator = Validator::make($request->all(), [
                     'tgl_awal' => 'required',
                     'tgl_akhir' => 'required',
@@ -66,84 +60,69 @@ class ReportController extends Controller
                                 ->withErrors($validator)
                                 ->withInput();
                 }
+
                 $date1 = $request->tgl_awal;
                 $date2 = $request->tgl_akhir;
             }
-            // dd($request);
+
+            
             $dateawal =date_create($date1)->modify('first day of this month');
-            $datedua =date_create($date2)->modify('last day of this month');
+            $dateahir =date_create($date2)->modify('last day of this month');
     
-            $datesatu = $dateawal->format('Y-m-d');//berformat YMD
+            $tanggalformat = $dateawal->format('Y-m-d');
 
-            $interval = date_diff($dateawal, $datedua)->m + (date_diff($dateawal, $datedua)->y * 12); 
+            // hitung perbedaan bulan dan tahun nanti akan jadi patokan saat looping
+            $interval = date_diff($dateawal, $dateahir)->m + (date_diff($dateawal, $dateahir)->y * 12); //perbedaan bulan dan tahun
 
-            if($interval > 0){
+
+            if($interval > 0){ //kalo selisih tanggal awal dan ahir nya lebih dari 0 / minimal 1 bulan
+
+                // mengisi variable dengan kelompok per bulan dan per type
                 for($i = 0; $i < $interval; $i ++){
-                    $tambah = $i+1;
-                    $start[$i] = date('Y-m-01', strtotime('+'.$tambah.'month', strtotime( $datesatu )));
-                    $end[$i] = date('Y-m-t', strtotime('+'.$tambah.'month', strtotime( $datesatu )));
-                }
-                for ($i=0; $i < $interval; $i++) { 
+
+                    $start[$i] = date('Y-m-01', strtotime('+'.($i+1).'month', strtotime( $tanggalformat )));
+                    $end[$i] = date('Y-m-t', strtotime('+'.($i+1).'month', strtotime( $tanggalformat )));
+                
                     $perbulan[$i] = $start[$i]; 
-                    $data[$start[$i]][0] = ReportController::getDataAntara($start[$i],$end[$i],0);
-                    $data[$start[$i]][1] = ReportController::getDataAntara($start[$i],$end[$i],1);
+                    $data[$start[$i]][0] = ReportController::getDataAntara($start[$i],$end[$i],0);//type kredit
+                    $data[$start[$i]][1] = ReportController::getDataAntara($start[$i],$end[$i],1);//type debit
                 }
-            }else{
-                $start = date('Y-m-01',strtotime( $datesatu ));
-                $end = date('Y-m-t', strtotime( $datesatu ));
-                $data[$start][0] = ReportController::getDataAntara($start,$end,0);
-                $data[$start][1] = ReportController::getDataAntara($start,$end,1);
+
+            }else{ // kalo bulan awal dan ahir selisihnya 0 bulan / hanya satu bulan itu saja
+
+                $start = date('Y-m-01',strtotime( $tanggalformat ));
+                $end = date('Y-m-t', strtotime( $tanggalformat ));
+
+                $data[$start][0] = ReportController::getDataAntara($start,$end,0);//type kredit
+                $data[$start][1] = ReportController::getDataAntara($start,$end,1);//type debit
+
                 $perbulan[0] = $start;//data nama bulan/tahun
             }
 
-            $data['tahun'] = $tahun;
-            $data['bulan'] = $bulan;
-
             //kirim data per tanggal berapa
-            if($dateawal->format('Y-m') == $datedua->format('Y-m')){
+            if($dateawal->format('Y-m') == $dateahir->format('Y-m')){
                 $pertanggal = $dateawal->format('Y-m');
             }else{
-                $pertanggal = $dateawal->format('Y-m').' to '.$datedua->format('Y-m');
+                $pertanggal = $dateawal->format('Y-m').' to '.$dateahir->format('Y-m');
             }
+
             return view('export.export', compact('data','listCategory','perbulan','pertanggal'));
 
-            // }//
-
+        
+        //kalo gaada filter
         }else{
             $now = date("Y-m-d");
-            $dateawal =date_create($now)->modify('first day of this month');
-            $datedua =date_create($now)->modify('last day of this month');
-    
-            $datesatu = $dateawal->format('Y-m-d');//berformat YMD
 
-            $interval = date_diff($dateawal, $datedua)->m + (date_diff($dateawal, $datedua)->y * 12); 
+            $start = date('Y-m-01',strtotime( $now ));//awal bulan
+            $end = date('Y-m-t', strtotime( $now ));//ahir bulan
 
-            if($interval > 0){
-                for($i = 0; $i < $interval; $i ++){
-                    $tambah = $i+1;
-                    $start[$i] = date('Y-m-01', strtotime('+'.$tambah.'month', strtotime( $datesatu )));
-                    $end[$i] = date('Y-m-t', strtotime('+'.$tambah.'month', strtotime( $datesatu )));
-                }
-                for ($i=0; $i < $interval; $i++) { 
-                    $perbulan[$i] = $start[$i]; 
-                    $data[$start[$i]][0] = ReportController::getDataAntara($start[$i],$end[$i],0);
-                    $data[$start[$i]][1] = ReportController::getDataAntara($start[$i],$end[$i],1);
-                }
-            }else{
-                $start = date('Y-m-01',strtotime( $datesatu ));
-                $end = date('Y-m-t', strtotime( $datesatu ));
-                $data[$start][0] = ReportController::getDataAntara($start,$end,0);
-                $data[$start][1] = ReportController::getDataAntara($start,$end,1);
-                $perbulan[0] = $start;
-            }
+            $perbulan[0] = $start;
 
-            $data['tahun'] = $tahun;
-            $data['bulan'] = $bulan;
-            if($dateawal->format('Y-m') == $datedua->format('Y-m')){
-                $pertanggal = $dateawal->format('Y-m');
-            }else{
-                $pertanggal = $dateawal->format('Y-m').' to '.$datedua->format('Y-m');
-            }
+            $data[$start][0] = ReportController::getDataAntara($start,$end,0);//jenis kredit
+            $data[$start][1] = ReportController::getDataAntara($start,$end,1);//jenis Debit
+
+            $pertanggal = date_create($now)->format('Y-m');//nampilin tanggal sekarang
+            
             return view('export.export', compact('data','perbulan','pertanggal','listCategory'));
         }
 
@@ -153,14 +132,13 @@ class ReportController extends Controller
 
     public function getDataAntara($start_date,$end_date,$type)
     {
-        $data = Transaksi::selectRaw('sum(transaksi.nominal) AS amount , MONTH(transaksi.created_at) As month , YEAR(transaksi.created_at) As Year, categories.nama AS category')
+        $data = Transaksi::selectRaw('sum(transaksi.nominal) AS amount , MONTH(transaksi.created_at) AS month , YEAR(transaksi.created_at) AS Year, categories.nama AS category')
                     ->leftjoin('coa', 'coa.id', '=', 'transaksi.coa_id')
                     ->leftjoin('categories', 'categories.id', '=', 'coa.category_id')
                     ->where('categories.indicator', $type)
                     ->groupBy('categories.nama')
                     ->groupBy(Transaksi::raw('MONTH(transaksi.created_at)'))
                     ->groupBy(Transaksi::raw('YEAR(transaksi.created_at)'))
-                    // ->orderBy('coa.category_id')
                     ->whereBetween('transaksi.created_at',[$start_date,$end_date])
                     ->get();               
         return $data;

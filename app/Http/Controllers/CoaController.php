@@ -21,18 +21,25 @@ class CoaController extends Controller
 
     public function index()
     {
-        $data = Coa::with('category')->get();
+        $data =  Coa::select('coa.id','coa.nama','coa.kode','categories.nama AS category','categories.indicator AS indicator')
+                    ->join('categories','categories.id','=','coa.category_id')
+                    ->get();
+
         $db_category = Category::get();
         $i=0;
         $row = $db_category->count();
+
         foreach($db_category as $items){
             $category[$i] = array(
                 'id' => $items->id,
-                'nama' => $items->nama);
+                'nama' => $items->nama,
+                'indicator' => $items->indicator
+            );
+
             $i++;
         }
 
-        // dd($category);
+        // dd($data);
         return view('master.coa', compact('data','category','row'));
     }
 
@@ -152,8 +159,8 @@ class CoaController extends Controller
             'nama'     => $request->nama, 
             'category_id'   => $request->category_id
         ]);
-        $db = Coa::where('id', $id)->with('category')->first();
-        $category = $db->category->nama;
+        $category_id = Coa::where('id', $id)->first()->category_id;
+        $category = Category::where('id', $category_id)->first();
 
         return response()->json([
             'success' => true,
@@ -161,7 +168,8 @@ class CoaController extends Controller
             'refresh' => $refresh,
             'nama' => $request->nama,
             'kode' => $kode,
-            'category' => $category,
+            'category' => $category->nama,
+            'type' => $category->indicator,
             'id'   => $id  
         ]);
     }
