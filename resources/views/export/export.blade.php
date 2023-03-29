@@ -243,32 +243,32 @@
         }
 
         // export xls
-        $(document).on('click','#btnExport',function() {
+        // $(document).on('click','#btnExport',function() {
 
-            var tab_text="<table border = '2px'><tr>";
-            var textRange; var j=0;
-            tab = document.getElementById('tabel');
+        //     var tab_text="<table border = '2px'><tr>";
+        //     var textRange; var j=0;
+        //     tab = document.getElementById('tabel');
 
-            for(j = 0 ; j < tab.rows.length ; j++) 
-            {     
-                tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
-            }
+        //     for(j = 0 ; j < tab.rows.length ; j++) 
+        //     {     
+        //         tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+        //     }
 
-            tab_text=tab_text+"</table>";
-            tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");
-            tab_text= tab_text.replace(/<img[^>]*>/gi,""); 
-            tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); 
+        //     tab_text=tab_text+"</table>";
+        //     tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+        //     tab_text= tab_text.replace(/<img[^>]*>/gi,""); 
+        //     tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); 
 
-            var ua = window.navigator.userAgent;
-            var msie = ua.indexOf("MSIE "); 
+        //     var ua = window.navigator.userAgent;
+        //     var msie = ua.indexOf("MSIE "); 
 
-            var result = 'data:application/vnd.ms-excel,' + encodeURIComponent(tab_text);
-            var link = document.createElement("a");
-            document.body.appendChild(link);
-            link.download = "report-{{$pertanggal}}-coa.xls"; //namafile nya
-            link.href = result;
-            link.click();
-        });
+        //     var result = 'data:application/vnd.ms-excel,' + encodeURIComponent(tab_text);
+        //     var link = document.createElement("a");
+        //     document.body.appendChild(link);
+        //     link.download = "report-{{$pertanggal}}-coa.xls"; //namafile nya
+        //     link.href = result;
+        //     link.click();
+        // });
 
 
         // export pdf
