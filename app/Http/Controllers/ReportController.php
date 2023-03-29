@@ -129,7 +129,8 @@ class ReportController extends Controller
                 'perbulan' => $perbulan,
                 'listCategory' => $listCategory,
             ];
-            return Excel::download(new ReportsDataExport($pass), 'filter.xlsx');
+            return Excel::download(new ReportsDataExport($pass), 'export-'.$pertanggal.'.xlsx');
+
         }else{
             if(isset($request->search)){
                 return view('export.export', compact('data','listCategory','perbulan','pertanggal','request'));

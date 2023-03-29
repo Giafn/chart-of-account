@@ -57,7 +57,7 @@
             fill: false,
             hoverOffset: 0,
             borderColor: 'rgb(13 110 253)',
-            tension: 0.1
+            tension: 0.4
             }]
     }});
   </script>

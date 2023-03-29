@@ -18,11 +18,13 @@
                                 @php
                                     $bulan=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
                                 @endphp
-                                <select name="month" class="form-control {{ $errors->has('month') ? 'is-invalid':'' }}">
-                                    <option disabled selected>--Month--</option>
+                                <select name="month" class="form-control {{ $errors->has('month') ? 'is-invalid':'' }}" >
+                                    <option disabled @if(!isset($request->month)) selected @endif>--Month--</option>
                                     @for ($i = 0; $i < 12; $i++)
-                                    <?php $index=$i+1; ?>
-                                    <option value="{{$i+1}}">{{$bulan[$i]}}</option>
+                                        <?php $index=$i+1; ?>
+                                        <option value="{{$i+1}}" @isset($request->month) @if ($i+1 == $request->month) selected  @endif @endisset >
+                                            {{$bulan[$i]}}
+                                        </option>
                                     @endfor
                                 </select>
                             </div>
@@ -30,7 +32,11 @@
                                 <input type="number" name="years" 
                                 class="form-control {{ $errors->has('years') ? 'is-invalid':'' }}"
                                 id="tahun"
-                                value="{{ date('Y') }}"
+                                @if(isset($request->years)) 
+                                    value="{{ $request->years }}"
+                                @else
+                                    value="{{ date('Y') }}"
+                                @endif 
                                 placeholder="years">
                             </div>
                             <div class="col-lg-4 d-flex">
@@ -51,6 +57,9 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <input type="month" class="form-control {{ $errors->has('tgl_awal') ? 'is-invalid':'' }}" name="tgl_awal"
+                                @if(isset($request->tgl_awal)) 
+                                    value="{{ $request->tgl_awal }}"
+                                @endif 
                                 placeholder="Dari Tanggal">
                                 
                             </div>
@@ -58,6 +67,9 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <input type="month" class="form-control {{ $errors->has('tgl_akhir') ? 'is-invalid':'' }}" name="tgl_akhir"
+                                @if(isset($request->tgl_akhir)) 
+                                    value="{{ $request->tgl_akhir }}"
+                                @endif 
                                 placeholder="Sampai Tanggal">
                             </div>
                         </div>
@@ -110,101 +122,104 @@
     }
 @endphp
 
-
-<div class="row overflow-auto">
-    <div class="col-12 my-3 h5">displaying data from {{$pertanggal}}</div>
-    <div class="col">
-        <table class="table table-responsive @if($jmldata < 1) d-none @endif" id="tabel">
-                <tr>
-                    <th style="background-color: yellow"><b>Category <br></b></th>
-                    @for ($i = 0; $i < count($perbulan); $i++) 
-                        @if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1)
-                            <th style="background-color: yellow"><b>{{date('Y-m',strtotime($perbulan[$i]))}} <br>amount</b></th>
-                        @endif
-                    @endfor
-                </tr>
-                @for ($i = 0; $i < count($listCategory['income']); $i++) {{--looping kategori type income--}}
-                <tr>
-                    <td style="background-color: rgb(198, 224, 180)">{{$listCategory['income'][$i]}}</td>
-                    @for ($e = 0; $e < count($perbulan); $e++) 
-                        @php $h = $e @endphp
-                        @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            @if (count($data[$perbulan[$e]][0]) > 0)
-                                @foreach ($data[$perbulan[$e]][0] as $item)
-                                @if(in_array_r($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
-                                    @if($item->category == $listCategory['income'][$i])
-                                        <td style="background-color: rgb(198, 224, 180)">{{number_format($item->amount)}}</td>
-                                    @endif
-                                @elseif($e == $h)
-                                    <td style="background-color: rgb(198, 224, 180)">0</td>
-                                    @php $h = -1 @endphp
+<div class="card">
+    <div class="card-body">
+        <div class="row overflow-auto">
+            <div class="col-12 my-3 h5">displaying data from {{$pertanggal}}</div>
+            <div class="col">
+                <table class="table table-responsive @if($jmldata < 1) d-none @endif" id="tabel">
+                        <tr>
+                            <th style="background-color: yellow"><b>Category <br></b></th>
+                            @for ($i = 0; $i < count($perbulan); $i++) 
+                                @if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1)
+                                    <th style="background-color: yellow"><b>{{date('Y-m',strtotime($perbulan[$i]))}} <br>amount</b></th>
                                 @endif
-                                @endforeach
-                            @else
-                                <td style="background-color: rgb(198, 224, 180)">0</td>
-                            @endif
-                        @endif
-                    @endfor
-                </tr>
-                @endfor
-                
-                <tr>
-                    <td style="background-color: rgb(169, 208, 142)"><b>Total Income</b></td>
-                    @for ($e = 0; $e < count($perbulan); $e++) 
-                    @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                    <td style="background-color: rgb(169, 208, 142)">{{number_format($data[$perbulan[$e]][0]->sum('amount'))}}</td>
-                    @endif
-                    @endfor
-                </tr>
-
-                @for ($i = 0; $i < count($listCategory['expense']); $i++) {{--looping kategori type income--}}
-                <tr>
-                    <td style="background-color: rgb(248, 203, 173)">{{$listCategory['expense'][$i]}}</td>
-                    @for ($e = 0; $e < count($perbulan); $e++) 
-                        @php $h = $e @endphp
-                        @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            @if (count($data[$perbulan[$e]][1]) > 0)
-                                @foreach ($data[$perbulan[$e]][1] as $item)
-                                @if(in_array_r($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
-                                    @if($item->category == $listCategory['expense'][$i])
-                                        <td style="background-color: rgb(248, 203, 173)">{{number_format($item->amount)}}</td>
+                            @endfor
+                        </tr>
+                        @for ($i = 0; $i < count($listCategory['income']); $i++) {{--looping kategori type income--}}
+                        <tr>
+                            <td>{{$listCategory['income'][$i]}}</td>
+                            @for ($e = 0; $e < count($perbulan); $e++) 
+                                @php $h = $e @endphp
+                                @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                                    @if (count($data[$perbulan[$e]][0]) > 0)
+                                        @foreach ($data[$perbulan[$e]][0] as $item)
+                                        @if(in_array_r($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
+                                            @if($item->category == $listCategory['income'][$i])
+                                                <td>{{number_format($item->amount)}}</td>
+                                            @endif
+                                        @elseif($e == $h)
+                                            <td>0</td>
+                                            @php $h = -1 @endphp
+                                        @endif
+                                        @endforeach
+                                    @else
+                                        <td>0</td>
                                     @endif
-                                @elseif($e == $h)
-                                    <td style="background-color: rgb(248, 203, 173)">0</td>
-                                    @php $h = -1 @endphp
                                 @endif
-                                @endforeach
-                            @else
-                                <td style="background-color: rgb(248, 203, 173)">0</td>
+                            @endfor
+                        </tr>
+                        @endfor
+                        
+                        <tr>
+                            <td style="background-color: rgb(0, 255, 0)"><b>Total Income</b></td>
+                            @for ($e = 0; $e < count($perbulan); $e++) 
+                            @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                            <td style="background-color: rgb(0, 255, 0)">{{number_format($data[$perbulan[$e]][0]->sum('amount'))}}</td>
                             @endif
-                        @endif
-                    @endfor
-                </tr>
-                @endfor
-
-                <tr>
-                    <td style="background-color: rgb(244, 176, 132)"><b>Total Expense</b></td>
-                    @for ($e = 0; $e < count($perbulan); $e++) 
-                    @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                    <td style="background-color: rgb(244, 176, 132)">{{number_format($data[$perbulan[$e]][1]->sum('amount'))}}</td>
-                    @endif
-                    @endfor
-                </tr>
-                <tr>
-                    <th>Net income</th>
-                    @for ($e = 0; $e < count($perbulan); $e++) 
-                    @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                    @php
-                        $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
-                    @endphp
-                    <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{number_format($netincome)}}</th>
-                    @endif
-                    @endfor
-                </tr>
-        </table>
-    </div>
-    <div class="col-12 text-center my-4">
-        @if($jmldata < 1) <h4>No data available</h4> @endif
+                            @endfor
+                        </tr>
+        
+                        @for ($i = 0; $i < count($listCategory['expense']); $i++) {{--looping kategori type income--}}
+                        <tr>
+                            <td>{{$listCategory['expense'][$i]}}</td>
+                            @for ($e = 0; $e < count($perbulan); $e++) 
+                                @php $h = $e @endphp
+                                @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                                    @if (count($data[$perbulan[$e]][1]) > 0)
+                                        @foreach ($data[$perbulan[$e]][1] as $item)
+                                        @if(in_array_r($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
+                                            @if($item->category == $listCategory['expense'][$i])
+                                                <td>{{number_format($item->amount)}}</td>
+                                            @endif
+                                        @elseif($e == $h)
+                                            <td>0</td>
+                                            @php $h = -1 @endphp
+                                        @endif
+                                        @endforeach
+                                    @else
+                                        <td>0</td>
+                                    @endif
+                                @endif
+                            @endfor
+                        </tr>
+                        @endfor
+        
+                        <tr>
+                            <td style="background-color: rgb(244, 176, 132)"><b>Total Expense</b></td>
+                            @for ($e = 0; $e < count($perbulan); $e++) 
+                            @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                            <td style="background-color: rgb(244, 176, 132)">{{number_format($data[$perbulan[$e]][1]->sum('amount'))}}</td>
+                            @endif
+                            @endfor
+                        </tr>
+                        <tr>
+                            <th>Net income</th>
+                            @for ($e = 0; $e < count($perbulan); $e++) 
+                            @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                            @php
+                                $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
+                            @endphp
+                            <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{number_format($netincome)}}</th>
+                            @endif
+                            @endfor
+                        </tr>
+                </table>
+            </div>
+            <div class="col-12 text-center my-4">
+                @if($jmldata < 1) <h4>No data available</h4> @endif
+            </div>
+        </div>
     </div>
 </div>
 

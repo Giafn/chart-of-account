@@ -48,7 +48,7 @@
         
         <div class="row overflow-auto">
             <div class="col">
-                <table class="table table-responsive @if($jmldata < 1) d-none @endif" id="tabel">
+                <table class="table table-responsive @if($jmldata < 1) d-none @endif" id="tabel" border="1px dashed #CCC">
                         <tr>
                             <th style="background-color: yellow"><b>Category <br></b></th>
                             @for ($i = 0; $i < count($perbulan); $i++) 
@@ -59,7 +59,7 @@
                         </tr>
                         @for ($i = 0; $i < count($listCategory['income']); $i++) {{--looping kategori type income--}}
                         <tr>
-                            <td style="background-color: rgb(198, 224, 180)">{{$listCategory['income'][$i]}}</td>
+                            <td>{{$listCategory['income'][$i]}}</td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
                                 @php $h = $e @endphp
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
@@ -67,15 +67,15 @@
                                         @foreach ($data[$perbulan[$e]][0] as $item)
                                         @if(in_array_r($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
                                             @if($item->category == $listCategory['income'][$i])
-                                                <td style="background-color: rgb(198, 224, 180)">{{$item->amount}}</td>
+                                                <td>{{$item->amount}}</td>
                                             @endif
                                         @elseif($e == $h)
-                                            <td style="background-color: rgb(198, 224, 180)">0</td>
+                                            <td>0</td>
                                             @php $h = -1 @endphp
                                         @endif
                                         @endforeach
                                     @else
-                                        <td style="background-color: rgb(198, 224, 180)">0</td>
+                                        <td>0</td>
                                     @endif
                                 @endif
                             @endfor
@@ -83,17 +83,17 @@
                         @endfor
                         
                         <tr>
-                            <td style="background-color: rgb(169, 208, 142)"><b>Total Income</b></td>
+                            <td style="background-color: green"><b>Total Income</b></td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
                             @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            <td style="background-color: rgb(169, 208, 142)">{{$data[$perbulan[$e]][0]->sum('amount')}}</td>
+                            <td style="background-color: green">{{$data[$perbulan[$e]][0]->sum('amount')}}</td>
                             @endif
                             @endfor
                         </tr>
         
                         @for ($i = 0; $i < count($listCategory['expense']); $i++) {{--looping kategori type income--}}
                         <tr>
-                            <td style="background-color: rgb(248, 203, 173)">{{$listCategory['expense'][$i]}}</td>
+                            <td>{{$listCategory['expense'][$i]}}</td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
                                 @php $h = $e @endphp
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
@@ -101,15 +101,15 @@
                                         @foreach ($data[$perbulan[$e]][1] as $item)
                                         @if(in_array_r($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
                                             @if($item->category == $listCategory['expense'][$i])
-                                                <td style="background-color: rgb(248, 203, 173)">{{$item->amount}}</td>
+                                                <td>{{$item->amount}}</td>
                                             @endif
                                         @elseif($e == $h)
-                                            <td style="background-color: rgb(248, 203, 173)">0</td>
+                                            <td>0</td>
                                             @php $h = -1 @endphp
                                         @endif
                                         @endforeach
                                     @else
-                                        <td style="background-color: rgb(248, 203, 173)">0</td>
+                                        <td>0</td>
                                     @endif
                                 @endif
                             @endfor
@@ -117,22 +117,22 @@
                         @endfor
         
                         <tr>
-                            <td style="background-color: rgb(244, 176, 132)"><b>Total Expense</b></td>
+                            <td style="background-color: orange"><b>Total Expense</b></td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
                             @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            <td style="background-color: rgb(244, 176, 132)">{{$data[$perbulan[$e]][1]->sum('amount')}}</td>
+                            <td style="background-color: orange">{{$data[$perbulan[$e]][1]->sum('amount')}}</td>
                             @endif
                             @endfor
                         </tr>
                         <tr>
-                            <th>Net income</th>
+                            <th><b>Net income</b></th>
                             @for ($e = 0; $e < count($perbulan); $e++) 
-                            @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            @php
-                                $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
-                            @endphp
-                            <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{$netincome}}</th>
-                            @endif
+                                @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                                    @php
+                                        $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
+                                    @endphp
+                                    <th @if($netincome < 0) style="color: red" @endif><b>{{$netincome}}</b></th>
+                                @endif
                             @endfor
                         </tr>
                 </table>

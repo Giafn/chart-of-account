@@ -49,14 +49,14 @@
                         <table class="table" id="myTable">
                             <thead>
                               <tr>
-                                <th scope="col">Tanggal</th>
-                                <th scope="col">COA Code</th>
-                                <th scope="col">COA nama</th>
-                                <th scope="col">category nama</th>
-                                <th scope="col">Desc</th>
-                                <th scope="col">Debit</th>
-                                <th scope="col">Credit</th>
-                                <th scope="col">Action</th>
+                                <th class="text-center">Tanggal</th>
+                                <th class="text-center">COA Code</th>
+                                <th class="text-center">COA nama</th>
+                                <th class="text-center">category nama</th>
+                                <th class="text-center">Desc</th>
+                                <th class="text-center">Debit</th>
+                                <th class="text-center">Credit</th>
+                                <th class="text-center">Action</th>
                               </tr>
                             </thead>
                             <tbody>

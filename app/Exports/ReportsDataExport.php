@@ -22,6 +22,6 @@ class ReportsDataExport implements FromView,ShouldAutoSize
         $perbulan = $this->data['perbulan'];
         $listCategory = $this->data['listCategory'];
 
-        return view('export.exel', compact('data','perbulan','listCategory'));
+        return view('export.excel', compact('data','perbulan','listCategory'));
     }
 }
