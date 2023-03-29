@@ -10,6 +10,8 @@ Use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransaksiExport;
 
 class TransaksiController extends Controller
 {
@@ -81,8 +83,16 @@ class TransaksiController extends Controller
             $i++;
         }
     //
-
-        return view('transaksi', compact('data','coa','row','category', 'fromtanggal'));
+        if(isset($request->export)){//kalo request export
+            if($fromtanggal != null){
+                $range = $fromtanggal['start'].' to '.$fromtanggal['end'];
+            }else{
+                $range = 'All';
+            }
+            return Excel::download(new TransaksiExport($data), 'transaksi-'.$range.'.xlsx');
+        }else{
+            return view('transaksi', compact('data','coa','row','category', 'fromtanggal'));
+        }
     }
 
     public function store(Request $request)

@@ -9,13 +9,14 @@
                   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-modal">Tambah Transaksi</button>
                   <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal-export">Export</a>
                 </div>
-                <div class="row justify-content-center mt-4">
-                  <div class="col-10 card p-2">
+                <div class="row justify-content-center mt-4 px-3">
+                  <div class="col-12 card p-2">
+                    <b class="ms-3">filter data</b>
                     <form method="POST" action="{{url('/transaksifilter')}}" enctype="multipart/form-data">
                         <input type="hidden" name="search" value="1">
                         <div class="row justify-content-center gy-3">
                             @csrf
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <input type="date" class="form-control {{ $errors->has('startdate') ? 'is-invalid':'' }}" name="startdate"
                                     placeholder="Dari Tanggal"
@@ -25,7 +26,7 @@
                                     >
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <input type="date" class="form-control {{ $errors->has('enddate') ? 'is-invalid':'' }}" name="enddate"
                                     placeholder="Sampai Tanggal"
@@ -35,8 +36,8 @@
                                     >
                                 </div>
                             </div>
-                            <div class="col-lg-2 d-flex">
-                                <button class="btn btn-dark mx-1" type="submit" name="action"><i class="bi bi-search"></i></button>
+                            <div class="col-lg-1 d-flex">
+                                <button class="btn btn-dark mx-1" type="submit" name="action" id="filter"><i class="bi bi-search"></i></button>
                                 <a class="btn btn-dark mx-1" href="{{url('/transaksi')}}"><i class="bi bi-arrow-clockwise"></i></a>
                             </div>
                         </div>
@@ -225,11 +226,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <p>This action will only export the page that is displayed in the table, please adjust the table view, if it has been adjusted, please click export</p>
+                    <p>This action will export all the data, but if you use filters, the data will be exported as you want</p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a type="button" class="btn btn-primary" id="btnExport">Export</a>
+                    <form action="{{url('/transaksifilter')}}" method="post">
+                      @csrf
+                      <input type="hidden" name="export" value="1">
+                      @if(isset($fromtanggal))
+                        <input type="hidden" name="search" value="1">
+                        <input type="hidden" name="startdate" value="{{$fromtanggal['start']}}">
+                        <input type="hidden" name="enddate" value="{{$fromtanggal['end']}}">
+                      @endif
+                      <button type="submit" class="btn btn-primary" id="closemodal">Export</button>
+                      {{-- <a type="button" class="btn btn-primary" id="btnExport">Export</a> --}}
+                    </form>
                   </div>
                 </div>
               </div>
@@ -462,33 +473,8 @@
       return sign < 0 ? '-' + num : num;
     }
 
-
-    //export page table xls
-    $(document).on('click','#btnExport',function() {
-
-          var tab_text="<table border = '2px'><tr>";
-          var textRange; var j=0;
-          tab = document.getElementById('myTable');
-
-          for(j = 0 ; j < tab.rows.length ; j++) 
-          {     
-              tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
-          }
-
-          tab_text=tab_text+"</table>";
-          tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");
-          tab_text= tab_text.replace(/<img[^>]*>/gi,""); 
-          tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); 
-
-          var ua = window.navigator.userAgent;
-          var msie = ua.indexOf("MSIE "); 
-
-          var result = 'data:application/vnd.ms-excel,' + encodeURIComponent(tab_text);
-          var link = document.createElement("a");
-          document.body.appendChild(link);
-          link.download = "transaksi-{{date('Y/m/d')}}-coa.xls"; //namafile nya
-          link.href = result;
-          link.click();
+    $('body').on('click', '#closemodal', function() {
+      $('#modal-export').modal('toggle');
     });
 
     </script>
