@@ -48,7 +48,7 @@
         ],
         datasets: 
             [{
-            label: 'Profits in the last 3 months',
+            label: 'Profits in the last 12 months',
             data: [
               @foreach(array_reverse($bulan) as $items)
                 `{{$items['sum']}}`,

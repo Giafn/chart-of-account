@@ -10,6 +10,8 @@ Use App\Models\Transaksi;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportsDataExport;
 
 
 class ReportController extends Controller
@@ -32,8 +34,7 @@ class ReportController extends Controller
 
         // kalo ada filter
         if (isset($request->search)) {
-
-            if(isset($request->month) | isset($request->years)){//kalo pake search bulan dan tahun
+            if($request->search == "bulan"){//kalo pake search bulan dan tahun
                 $validator = Validator::make($request->all(), [
                     'month' => 'required',
                     'years' => 'required',
@@ -49,7 +50,7 @@ class ReportController extends Controller
                 $date1 = $request->years.'-'.$request->month.'-01';
                 $date2 = $request->years.'-'.$request->month.'-01';
 
-            }else{ //kalo pake search yang range
+            }elseif($request->search == "range"){ //kalo pake search yang range
 
                 $validator = Validator::make($request->all(), [
                     'tgl_awal' => 'required',
@@ -67,7 +68,7 @@ class ReportController extends Controller
             }
 
             
-            $dateawal =date_create($date1)->modify('first day of this month');
+            $dateawal =date_create($date1)->modify('first day of this month'); 
             $dateahir =date_create($date2)->modify('last day of this month');
     
             $tanggalformat = $dateawal->format('Y-m');
@@ -77,7 +78,6 @@ class ReportController extends Controller
 
 
             if($interval > 0){ //kalo selisih tanggal awal dan ahir nya lebih dari 0 / minimal 1 bulan
-
                 // mengisi variable dengan kelompok per bulan dan per type
                 for($i = 0; $i < $interval; $i ++){
 
@@ -106,9 +106,6 @@ class ReportController extends Controller
             }else{
                 $pertanggal = $dateawal->format('Y-m').' to '.$dateahir->format('Y-m');
             }
-
-            return view('export.export', compact('data','listCategory','perbulan','pertanggal'));
-
         
         //kalo gaada filter
         }else{
@@ -123,8 +120,22 @@ class ReportController extends Controller
             $data[$start][1] = ReportController::getDataAntara($start,$end,1);//jenis Debit
 
             $pertanggal = date_create($now)->format('Y-m');//nampilin tanggal sekarang
-            
-            return view('export.export', compact('data','perbulan','pertanggal','listCategory'));
+        }
+
+
+        if(isset($request->export)){ //kalo klik tombol export
+            $pass = [
+                'data' => $data,
+                'perbulan' => $perbulan,
+                'listCategory' => $listCategory,
+            ];
+            return Excel::download(new ReportsDataExport($pass), 'filter.xlsx');
+        }else{
+            if(isset($request->search)){
+                return view('export.export', compact('data','listCategory','perbulan','pertanggal','request'));
+            }else{
+                return view('export.export', compact('data','perbulan','pertanggal','listCategory'));
+            }
         }
 
 

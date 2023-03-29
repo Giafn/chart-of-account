@@ -11,7 +11,7 @@
             <div class="card p-2">
                 <form action="{{url('/report')}}" method="POST">
                     @csrf
-                    <input type="hidden" name="search" value="1">
+                    <input type="hidden" name="search" value="bulan">
                     <div class="form-group">
                         <div class="row gy-3">
                             <div class="col-lg-5">
@@ -45,7 +45,7 @@
         <div class="item mx-1">
             <div class="card p-2">
                 <form method="POST" action="{{url('/report')}}" enctype="multipart/form-data">
-                    <input type="hidden" name="search" value="1">
+                    <input type="hidden" name="search" value="range">
                     <div class="row gy-3">
                         @csrf
                         <div class="col-lg-4">
@@ -71,31 +71,44 @@
         </div>
     </div>
     <div class="col-12 text-start d-flex">
-            <a class="btn btn-dark mx-1" id="btnExport"><i class="bi bi-file-earmark-arrow-down"></i> xls</a>
+            <form method="POST" action="{{url('/report')}}">
+                <input type="hidden" name="export" value="1">
+                @csrf
+                @if(isset($request->search))
+                    @if ($request->search == "bulan")
+                        <input type="hidden" name="month" value="{{$request->month}}">
+                        <input type="hidden" name="years" value="{{$request->years}}">
+                        <input type="hidden" name="search" value="{{$request->search}}">
+                    @elseif ($request->search == "range")
+                        <input type="hidden" name="tgl_awal" value="{{$request->tgl_awal}}">
+                        <input type="hidden" name="tgl_akhir" value="{{$request->tgl_akhir}}">
+                        <input type="hidden" name="search" value="{{$request->search}}">
+                    @endif
+                @endif
+                <button type="submit" class="btn btn-dark mx-1"><i class="bi bi-file-earmark-arrow-down"></i> xls</button>
+            </form>
             <a class="btn btn-dark mx-1" id="Exportpdf"><i class="bi bi-file-earmark-arrow-down"></i> pdf</a>
     </div>
 </div>
 @php
+// dd($request);
     function in_array_r($needle, $haystack, $strict = false) {
         foreach ($haystack as $item) {
             if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
                 return true;
             }
         }
-
         return false;
     }
 
+    // hitung data
     $jmldata = 0;
-@endphp
-{{-- hitung jumlah data --}}
-@for ($i = 0; $i < count($perbulan); $i++) 
-    @if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1)
-        @php
+    for ($i = 0; $i < count($perbulan); $i++) {
+        if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1){
             $jmldata++;
-        @endphp
-    @endif
-@endfor
+        }
+    }
+@endphp
 
 
 <div class="row overflow-auto">
