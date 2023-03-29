@@ -21,80 +21,29 @@ class HomeController extends Controller
 
     public function index()
     {
-        $bulan = (int)date('m');
-        $tahun = (int)date('Y');
-
-        $totaldebit = Homecontroller::getDebitMonth($bulan,$tahun)['sum'];
-        $totalcredit = Homecontroller::getCreditMonth($bulan,$tahun)['sum'];
-
-        $Profitbulan = $totalcredit - $totaldebit;
-        
-
-        //data untuk chart
-        $date = date('Y-m-d');
-        $thismoth = date('m');
-        $threemoth = date('m', strtotime("-2 months", strtotime($date)));
-        $secondmoth = date('m', strtotime("-1 months", strtotime($date)));
-        $bln = array(
-            (int)$threemoth,
-            (int)$secondmoth,
-            (int)$thismoth,
-        );
-        for($i=0; $i<3; $i++){
-            $summonth[$i] = Homecontroller::getCreditMonth($bln[$i],$tahun)['sum'] - Homecontroller::getDebitMonth($bln[$i],$tahun)['sum'];
+        function sumPendapatan($now,$last){
+            if($now == $last){
+                $last = date("Y-m-t", strtotime($last));
+            }
+            $creditsum = app('App\Http\Controllers\ReportController')->getDataAntara($now,$last,0)->sum('amount');
+            $debitsum = app('App\Http\Controllers\ReportController')->getDataAntara($now,$last,1)->sum('amount');
+            $pendapatan = $creditsum - $debitsum;
+            return $pendapatan;
         }
 
-        return view('home', compact('Profitbulan','bln','summonth'));
+        //pendapatan bulan ini
+        $now = date('Y-m-01'); $last = date('Y-m-t');
+        $pendapatanbln = sumPendapatan($now,$last);
+
+        //data untuk grafik
+        for($i=0; $i<12; $i++){
+            $bulan[$i]['bln'] = date("Y-m-d",strtotime("-".$i." month", strtotime($now)));
+            $bulan[$i]['sum'] = sumPendapatan($bulan[$i]['bln'],$bulan[$i]['bln']);
+        }
+
+        // dd($bulan);
+        return view('home', compact('pendapatanbln','bulan'));
 
     }
 
-    public function getDebitMonth($bulan, $tahun)
-    {
-        $debitIndicator = Category::where('indicator', 1)->get();
-
-        global $debitId;
-        $i = 0;
-        // loop untuk masukin id ke array
-        foreach($debitIndicator as $item){
-            $debitId[$i] = $item->id;
-            $i++;
-        }
-        $debitData = Transaksi::whereMonth('created_at', $bulan)
-                        ->whereYear('created_at', $tahun)
-                        ->whereHas('coa', function ($query) {
-                            global $debitId;
-                            return $query->whereIn('category_id', $debitId);
-                        })->get();
-        $sum = $debitData->sum('nominal');
-        $data = array(
-            'data' => $debitData,
-            'sum' => $sum
-        );
-        return $data;
-    }
-
-    public function getCreditMonth($bulan, $tahun)
-    {
-        $creditIndicator = Category::where('indicator', 0)->get();
-
-        global $creditId;
-        $i = 0;
-        foreach($creditIndicator as $item){
-            $creditId[$i] = $item->id;
-            $i++;
-        }
-
-        $creditData = Transaksi::whereMonth('created_at', $bulan)
-                        ->whereYear('created_at', $tahun)
-                        ->whereHas('coa', function ($query) {
-                            global $creditId;
-                            return $query->whereIn('category_id', $creditId);
-                        })->get();
-        $sum = $creditData->sum('nominal');
-        $data = array(
-            'data' => $creditData,
-            'sum' => $sum
-        );
-        return $data;
-    }
 }

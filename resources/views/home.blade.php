@@ -10,7 +10,7 @@
     <div class="col-md-12 my-2">
       <div class="h-100 p-5 text-white bg-dark rounded-3">
         <h2>Profits of this month</h2>
-        <h1 class="fw-bold">Rp{{number_format($Profitbulan)}}</h1>
+        <h1 class="fw-bold">Rp{{number_format($pendapatanbln)}}</h1>
       </div>
     </div>
   </div>
@@ -37,25 +37,22 @@
 
 <script>
     const ctx = document.getElementById('myChart');
-    let bulan = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
-    let label = [
-        bulan['{{$bln[0]-1}}'],
-        bulan[`{{$bln[1]-1}}`],
-        bulan['{{$bln[2]-1}}'],
-    ];
-
     
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: label,
+        labels: [
+                @foreach(array_reverse($bulan) as $items)
+                `{{date("Y-m",strtotime($items['bln']))}}`,
+                @endforeach
+        ],
         datasets: 
             [{
             label: 'Profits in the last 3 months',
             data: [
-                `{{$summonth[0]}}`, 
-                `{{$summonth[1]}}`, 
-                `{{$summonth[2]}}`,
+              @foreach(array_reverse($bulan) as $items)
+                `{{$items['sum']}}`,
+              @endforeach
             ],
             fill: false,
             hoverOffset: 0,

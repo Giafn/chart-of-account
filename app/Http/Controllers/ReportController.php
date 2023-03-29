@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+
 class ReportController extends Controller
 {
     public function index(Request $request)
@@ -44,7 +45,7 @@ class ReportController extends Controller
                                 ->withInput();
                 }
 
-                // formatting data asalnya dari request dua variable jadi satuin menjadi string tanggal
+                // formatting tgl asalnya dari request dua variable jadi satuin menjadi string tanggal
                 $date1 = $request->years.'-'.$request->month.'-01';
                 $date2 = $request->years.'-'.$request->month.'-01';
 
@@ -69,7 +70,7 @@ class ReportController extends Controller
             $dateawal =date_create($date1)->modify('first day of this month');
             $dateahir =date_create($date2)->modify('last day of this month');
     
-            $tanggalformat = $dateawal->format('Y-m-d');
+            $tanggalformat = $dateawal->format('Y-m');
 
             // hitung perbedaan bulan dan tahun nanti akan jadi patokan saat looping
             $interval = date_diff($dateawal, $dateahir)->m + (date_diff($dateawal, $dateahir)->y * 12); //perbedaan bulan dan tahun
