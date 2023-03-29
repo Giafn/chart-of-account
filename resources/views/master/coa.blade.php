@@ -286,8 +286,10 @@
                         <td class="text-center">${response.category}</td>
                         <td class="text-center">${type}</td>
                         <td class="text-center">
-                          <button class="btn btn-sm btn-warning" id="btn-edit" data-id="${response.id}"><i class="bi bi-pencil"></i></button>
-                          <button class="btn btn-sm btn-danger" id="btn-delete" data-id="${response.id}"><i class="bi bi-trash2"></i></button>
+                          <div class="d-flex flex-row justify-content-center">
+                          <button class="btn btn-sm btn-warning m-1" id="btn-edit" data-id="${response.id}"><i class="bi bi-pencil"></i></button>
+                          <button class="btn btn-sm btn-danger m-1" id="btn-delete" data-id="${response.id}"><i class="bi bi-trash2"></i></button>
+                          </div>
                         </td>
                     </tr>
                 `;
