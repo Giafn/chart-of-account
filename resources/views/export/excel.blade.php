@@ -1,6 +1,5 @@
 
 <html lang="en">
-
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +24,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     </head>
     <body>
-        @php
+        <?php
             function in_array_r($needle, $haystack, $strict = false) {
                 foreach ($haystack as $item) {
                     if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
@@ -43,7 +42,7 @@
                     $jmldata++;
                 }
             }
-        @endphp
+        ?>
         
         
         <div class="row overflow-auto">
@@ -61,7 +60,7 @@
                         <tr>
                             <td>{{$listCategory['income'][$i]}}</td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
-                                @php $h = $e @endphp
+                                <?php $h = $e ?>
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                                     @if (count($data[$perbulan[$e]][0]) > 0)
                                         @foreach ($data[$perbulan[$e]][0] as $item)
@@ -71,7 +70,7 @@
                                             @endif
                                         @elseif($e == $h)
                                             <td>0</td>
-                                            @php $h = -1 @endphp
+                                            <?php $h = -1 ?>
                                         @endif
                                         @endforeach
                                     @else
@@ -95,7 +94,7 @@
                         <tr>
                             <td>{{$listCategory['expense'][$i]}}</td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
-                                @php $h = $e @endphp
+                                <?php $h = $e ?>
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                                     @if (count($data[$perbulan[$e]][1]) > 0)
                                         @foreach ($data[$perbulan[$e]][1] as $item)
@@ -105,7 +104,7 @@
                                             @endif
                                         @elseif($e == $h)
                                             <td>0</td>
-                                            @php $h = -1 @endphp
+                                            <?php $h = -1 ?>
                                         @endif
                                         @endforeach
                                     @else
@@ -128,9 +127,9 @@
                             <th><b>Net income</b></th>
                             @for ($e = 0; $e < count($perbulan); $e++) 
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                                    @php
+                                    <?php
                                         $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
-                                    @endphp
+                                    ?>
                                     <th @if($netincome < 0) style="color: red" @endif><b>{{$netincome}}</b></th>
                                 @endif
                             @endfor

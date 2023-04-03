@@ -103,17 +103,15 @@
     </div>
 </div>
 @php
-// dd($request);
-    function in_array_r($needle, $haystack, $strict = false) {
+    function InArray($needle, $haystack, $strict = false) {
         foreach ($haystack as $item) {
-            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && InArray($needle, $item, $strict))) {
                 return true;
             }
         }
         return false;
     }
 
-    // hitung data
     $jmldata = 0;
     for ($i = 0; $i < count($perbulan); $i++) {
         if ($data[$perbulan[$i]][0]->sum('amount') > 1 | $data[$perbulan[$i]][1]->sum('amount') > 1){
@@ -144,7 +142,7 @@
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                                     @if (count($data[$perbulan[$e]][0]) > 0)
                                         @foreach ($data[$perbulan[$e]][0] as $item)
-                                        @if(in_array_r($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
+                                        @if(InArray($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
                                             @if($item->category == $listCategory['income'][$i])
                                                 <td>{{number_format($item->amount)}}</td>
                                             @endif
@@ -164,9 +162,9 @@
                         <tr>
                             <td style="background-color: rgb(0, 255, 0)"><b>Total Income</b></td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
-                            @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            <td style="background-color: rgb(0, 255, 0)">{{number_format($data[$perbulan[$e]][0]->sum('amount'))}}</td>
-                            @endif
+                                @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                                    <td style="background-color: rgb(0, 255, 0)">{{number_format($data[$perbulan[$e]][0]->sum('amount'))}}</td>
+                                @endif
                             @endfor
                         </tr>
         
@@ -178,14 +176,14 @@
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                                     @if (count($data[$perbulan[$e]][1]) > 0)
                                         @foreach ($data[$perbulan[$e]][1] as $item)
-                                        @if(in_array_r($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
-                                            @if($item->category == $listCategory['expense'][$i])
-                                                <td>{{number_format($item->amount)}}</td>
+                                            @if(InArray($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
+                                                @if($item->category == $listCategory['expense'][$i])
+                                                    <td>{{number_format($item->amount)}}</td>
+                                                @endif
+                                            @elseif($e == $h)
+                                                <td>0</td>
+                                                @php $h = -1 @endphp
                                             @endif
-                                        @elseif($e == $h)
-                                            <td>0</td>
-                                            @php $h = -1 @endphp
-                                        @endif
                                         @endforeach
                                     @else
                                         <td>0</td>
@@ -198,36 +196,33 @@
                         <tr>
                             <td style="background-color: rgb(244, 176, 132)"><b>Total Expense</b></td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
-                            @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            <td style="background-color: rgb(244, 176, 132)">{{number_format($data[$perbulan[$e]][1]->sum('amount'))}}</td>
-                            @endif
+                                @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                                    <td style="background-color: rgb(244, 176, 132)">{{number_format($data[$perbulan[$e]][1]->sum('amount'))}}</td>
+                                @endif
                             @endfor
                         </tr>
                         <tr>
                             <th>Net income</th>
                             @for ($e = 0; $e < count($perbulan); $e++) 
-                            @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
-                            @php
-                                $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
-                            @endphp
-                            <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{number_format($netincome)}}</th>
-                            @endif
+                                @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
+                                    @php
+                                        $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
+                                    @endphp
+                                <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{number_format($netincome)}}</th>
+                                @endif
                             @endfor
                         </tr>
                 </table>
             </div>
             <div class="col-12 text-center my-4">
-                @if($jmldata < 1) <h4>No data available</h4> @endif
+                @if($jmldata < 1)
+                    <h4>No data available</h4>
+                @endif
             </div>
         </div>
     </div>
 </div>
-
-    
-    
-
 @endsection
-
 
  @push('js')
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
@@ -242,36 +237,6 @@
             toastr.error('please fill the filter correctly', 'Error!');
         }
 
-        // export xls
-        // $(document).on('click','#btnExport',function() {
-
-        //     var tab_text="<table border = '2px'><tr>";
-        //     var textRange; var j=0;
-        //     tab = document.getElementById('tabel');
-
-        //     for(j = 0 ; j < tab.rows.length ; j++) 
-        //     {     
-        //         tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
-        //     }
-
-        //     tab_text=tab_text+"</table>";
-        //     tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");
-        //     tab_text= tab_text.replace(/<img[^>]*>/gi,""); 
-        //     tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); 
-
-        //     var ua = window.navigator.userAgent;
-        //     var msie = ua.indexOf("MSIE "); 
-
-        //     var result = 'data:application/vnd.ms-excel,' + encodeURIComponent(tab_text);
-        //     var link = document.createElement("a");
-        //     document.body.appendChild(link);
-        //     link.download = "report-{{$pertanggal}}-coa.xls"; //namafile nya
-        //     link.href = result;
-        //     link.click();
-        // });
-
-
-        // export pdf
         $(document).on('click','#Exportpdf',function(){
             var doc = new jsPDF('landscape');
             doc.autoTable({ html: '#tabel' })

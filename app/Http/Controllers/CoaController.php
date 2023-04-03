@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 Use App\Models\Coa;
 Use App\Models\Category;
 Use App\Models\Transaksi;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 
 class CoaController extends Controller
@@ -39,35 +36,23 @@ class CoaController extends Controller
             $i++;
         }
 
-        // dd($data);
         return view('master.coa', compact('data','category','row'));
     }
 
     public function store(Request $request)
     {
-        // untuk kode 
-        // type income = 400 - 599, kalo lebih akan di lajut dengan 800 - 999
-        // type expanse = 600 -799, kalo lebih akan di lajut dengan 1000 - 1199
-        // diatas range yang di sebutkan akan increament bercampur income dan expanse 
-        // contoh : expanse 2000, income 2001
-
-
         $validator = Validator::make($request->all(), [
-            // 'kode'   => 'unique:coa,kode',
             'nama'   => 'required',
             'category_id'   => 'required',
         ]);
         
         global $getType;
         $getType = Category::where('id',$request->category_id)->first()->indicator;
-        
-        //cari kode paling besar dari tipe nya
         $kode = Coa::whereHas('category', function($q){
             global $getType;
             $q->where('indicator', $getType);
         })->get()->max('kode')+1;
 
-        // return response()->json($kode, 422);
 
         if($getType == 0 && $kode == 600 && $kode <= 999){
             $kode = $kode+200;
@@ -77,22 +62,16 @@ class CoaController extends Controller
             $kode = Coa::get()->max('kode')+1;
         }
 
-        //check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        // create post
 
         $post = new Coa;
         $post->kode = $kode;
         $post->nama = $request->nama;
         $post->category_id = $request->category_id;
         $post->save();
-
-
-
-        //return response
+        
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Disimpan!',
@@ -112,47 +91,36 @@ class CoaController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            // 'kode'     => ['required',Rule::unique('coa')->ignore($id),],
             'nama'     => 'required',
             'category_id'     => 'required',
         ]);
 
-        //check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+        
+        $coaAwal = Coa::where('id', $id)->first();
+        $kode = $coaAwal->kode;
 
-        //ambil data kode dari id
-        $coaawal = Coa::where('id', $id)->first();
-        $kode = $coaawal->kode;
+        $typeTransaksi = Category::where('id', $coaAwal->category_id)->first()->indicator;
 
-
-        // ambil type transaksi awal
-        $typeawal = Category::where('id', $coaawal->category_id)->first()->indicator;
-
-        // ambil type transaksi request
         $type = Category::where('id', $request->category_id)->first()->indicator;
-
-        // return response()->json([$type,$typeawal], 422);
-
-        // jika ada perubahan type transaksi maka lakukan perubahan kode
-        $refresh = 0;
-        if($typeawal !== $type){
-            if($typeawal == 0 && $type == 1){
+        
+        if($typeTransaksi !== $type){
+            if($typeTransaksi == 0 && $type == 1){
                 $kode = Coa::whereHas('category', function($q){
                     $q->where('indicator', '1');
                 })->get()->max('kode')+1;
-
-
-            }elseif($typeawal == 1 &&  $type == 0){
+            }elseif($typeTransaksi == 1 &&  $type == 0){
                 $kode = Coa::whereHas('category', function($q){
                     $q->where('indicator', '0');
                 })->get()->max('kode')+1;
             }
             $refresh = 1;
+        }else{
+            $refresh = 0;
         }
 
-        //create update
         $update = new Coa;
         $update->where('id',$id)->update([
             'kode'     => $kode, 
@@ -176,14 +144,11 @@ class CoaController extends Controller
 
     public function destroy($id)
     {
-        //delete post by ID
         $coa = Coa::find($id);
         $transaksi = Transaksi::where('coa_id',$id)->get()->count();
-        //return response 
-        //cek transaksi
         if($transaksi < 1){
             $coa->delete();
-            //return response
+
             return response()->json([
                 'success' => true,
                 'message' => 'row deleted successfully!.',
