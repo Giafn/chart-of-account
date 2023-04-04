@@ -20,17 +20,17 @@ class ReportController extends Controller
         $ex = 0;
 
         foreach ($category as $key) {
-            if($key->indicator == 0){
+            if ($key->indicator == 0) {
                 $listCategory['income'][$in] = $key->nama;
                 $in++;
-            }else{
+            } else {
                 $listCategory['expense'][$ex] = $key->nama;
                 $ex++;
             }
         }
 
         if (isset($request->search)) {
-            if($request->search == "bulan"){
+            if ($request->search == "bulan") {
                 $validator = Validator::make($request->all(), [
                     'month' => 'required',
                     'years' => 'required',
@@ -43,7 +43,7 @@ class ReportController extends Controller
                 $dateStart = $request->years.'-'.$request->month.'-01';
                 $dateEnd = $request->years.'-'.$request->month.'-01';
 
-            }elseif($request->search == "range"){ 
+            } elseif ($request->search == "range") { 
 
                 $validator = Validator::make($request->all(), [
                     'tgl_awal' => 'required',
@@ -59,14 +59,14 @@ class ReportController extends Controller
             }
 
             
-            $dateStart =date_create($dateStart)->modify('first day of this month'); 
-            $dateEnd =date_create($dateEnd)->modify('last day of this month');
+            $dateStart = date_create($dateStart)->modify('first day of this month'); 
+            $dateEnd = date_create($dateEnd)->modify('last day of this month');
     
             $dateFormat = $dateStart->format('Y-m');
 
             $interval = date_diff($dateStart, $dateEnd)->m + (date_diff($dateStart, $dateEnd)->y * 12);
-            if($interval > 0){ 
-                for($i = 0; $i < $interval; $i ++){
+            if ($interval > 0) { 
+                for ($i = 0; $i < $interval; $i ++) {
 
                     $start[$i] = date('Y-m-01', strtotime('+'.($i+1).'month', strtotime( $dateFormat )));
                     $end[$i] = date('Y-m-t', strtotime('+'.($i+1).'month', strtotime( $dateFormat )));
@@ -74,7 +74,7 @@ class ReportController extends Controller
                     $data[$start[$i]][0] = ReportController::GetDataAntara($start[$i],$end[$i],0);
                     $data[$start[$i]][1] = ReportController::GetDataAntara($start[$i],$end[$i],1);
                 }
-            }else{
+            } else {
                 $start = date('Y-m-01',strtotime( $dateFormat ));
                 $end = date('Y-m-t', strtotime( $dateFormat ));
 
@@ -83,12 +83,12 @@ class ReportController extends Controller
                 $perbulan[0] = $start;
             }
 
-            if($dateStart->format('Y-m') == $dateEnd->format('Y-m')){
+            if ($dateStart->format('Y-m') == $dateEnd->format('Y-m')) {
                 $pertanggal = $dateStart->format('Y-m');
-            }else{
+            } else {
                 $pertanggal = $dateStart->format('Y-m').' to '.$dateEnd->format('Y-m');
             }
-        }else{
+        } else {
             $now = date("Y-m-d");
             $start = date('Y-m-01',strtotime( $now ));
             $end = date('Y-m-t', strtotime( $now ));
@@ -99,7 +99,7 @@ class ReportController extends Controller
             $pertanggal = date_create($now)->format('Y-m');
         }
 
-        if(isset($request->export)){ 
+        if (isset($request->export)) { 
             $pass = [
                 'data' => $data,
                 'perbulan' => $perbulan,
@@ -107,10 +107,10 @@ class ReportController extends Controller
             ];
             return Excel::download(new ReportsDataExport($pass), 'report-'.$pertanggal.'.xlsx');
 
-        }else{
-            if(isset($request->search)){
+        } else {
+            if (isset($request->search)) {
                 return view('export.export', compact('data','listCategory','perbulan','pertanggal','request'));
-            }else{
+            } else {
                 return view('export.export', compact('data','perbulan','pertanggal','listCategory'));
             }
         }

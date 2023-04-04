@@ -10,6 +10,7 @@ Use App\Models\Category;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransaksiExport;
+use App\Jobs\testJob;
 
 class TransaksiController extends Controller
 {
@@ -25,7 +26,7 @@ class TransaksiController extends Controller
                             ->join('categories','categories.id','=','coa.category_id')
                             ->orderBy('transaksi.created_at', 'desc');
 
-        if(isset($request->search)){
+        if (isset($request->search)) {
             $validator = Validator::make($request->all(), [
                 'startdate'   => 'required',
                 'enddate'   => 'required'
@@ -44,7 +45,7 @@ class TransaksiController extends Controller
             $fromtanggal['start'] = $start;
             $fromtanggal['end'] = $end;
             
-        }else{
+        } else {
             $data =  $getdata->get();
         }
 
@@ -53,7 +54,7 @@ class TransaksiController extends Controller
 
         $listCategory = Category::get();
         $i=0;
-        foreach($listCategory as $items){
+        foreach ($listCategory as $items) {
             $category[$i] = $items->nama;
             $i++;
         }
@@ -61,7 +62,7 @@ class TransaksiController extends Controller
         $i=0;
         $row = $get_coa->count();
 
-        foreach($get_coa as $items){
+        foreach ($get_coa as $items) {
             $coa[$i] = array(
                 'id' => $items->id,
                 'kode' => $items->kode,
@@ -71,15 +72,15 @@ class TransaksiController extends Controller
             );
             $i++;
         }
-        if(isset($request->export)){
-            if($fromtanggal != null){
+        if (isset($request->export)) {
+            if ($fromtanggal != null) {
                 $range = $fromtanggal['start'].' to '.$fromtanggal['end'];
-            }else{
+            } else {
                 $range = 'All';
             }
 
             return Excel::download(new TransaksiExport($data), 'transaksi-'.$range.'.xlsx');
-        }else{
+        } else {
             return view('transaksi', compact('data','coa','row','category', 'fromtanggal'));
         }
     }

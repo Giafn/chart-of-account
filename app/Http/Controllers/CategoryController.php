@@ -36,9 +36,9 @@ class CategoryController extends Controller
         $post->indicator = $request->type;
         $post->save();
 
-        if($request->type == 0){
+        if ($request->type == 0) {
             $type = 'Kredit';
-        }else{
+        } else {
             $type = 'Debit';
         }
 
@@ -84,9 +84,9 @@ class CategoryController extends Controller
         ]);
 
         
-        if($request->type == 0){
+        if ($request->type == 0) {
             $type = 'Kredit';
-        }else{
+        } else {
             $type = 'Debit';
         }
 
@@ -105,13 +105,13 @@ class CategoryController extends Controller
     {
         $account = Category::find($id);
         $coa = Coa::where('category_id', $id)->get()->count();
-        if($coa < 1){
+        if ($coa < 1) {
             $account->delete();
             return response()->json([
                 'success' => true,
                 'message' => 'row deleted successfully!.',
             ]); 
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'category data is still in use.',

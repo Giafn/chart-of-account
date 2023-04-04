@@ -14,11 +14,12 @@ class HomeController extends Controller
     public function index()
     {
         function SumPendapatan($now,$last){
-            if($now == $last){
+            if ($now == $last) {
                 $last = date("Y-m-t", strtotime($last));
             }
-            $creditsum = app('App\Http\Controllers\ReportController')->GetDataAntara($now,$last,0)->sum('amount');
-            $debitsum = app('App\Http\Controllers\ReportController')->GetDataAntara($now,$last,1)->sum('amount');
+            $report = new ReportController;
+            $creditsum = $report->GetDataAntara($now,$last,0)->sum('amount');
+            $debitsum = $report->GetDataAntara($now,$last,1)->sum('amount');
             $pendapatan = $creditsum - $debitsum;
             return $pendapatan;
         }
@@ -26,7 +27,7 @@ class HomeController extends Controller
         $now = date('Y-m-01'); $last = date('Y-m-t');
         $pendapatanbln = SumPendapatan($now,$last);
 
-        for($i=0; $i<12; $i++){
+        for ($i=0; $i<12; $i++) {
             $bulan[$i]['bln'] = date("Y-m-d",strtotime("-".$i." month", strtotime($now)));
             $bulan[$i]['sum'] = SumPendapatan($bulan[$i]['bln'],$bulan[$i]['bln']);
         }

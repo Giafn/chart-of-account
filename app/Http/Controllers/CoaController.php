@@ -26,13 +26,12 @@ class CoaController extends Controller
         $i=0;
         $row = $db_category->count();
 
-        foreach($db_category as $items){
+        foreach ($db_category as $items) {
             $category[$i] = array(
                 'id' => $items->id,
                 'nama' => $items->nama,
                 'indicator' => $items->indicator
             );
-
             $i++;
         }
 
@@ -48,17 +47,17 @@ class CoaController extends Controller
         
         global $getType;
         $getType = Category::where('id',$request->category_id)->first()->indicator;
-        $kode = Coa::whereHas('category', function($q){
+        $kode = Coa::whereHas('category', function($q) {
             global $getType;
             $q->where('indicator', $getType);
         })->get()->max('kode')+1;
 
 
-        if($getType == 0 && $kode == 600 && $kode <= 999){
+        if ($getType == 0 && $kode == 600 && $kode <= 999) {
             $kode = $kode+200;
-        }elseif($getType == 1 && $kode == 800 && $kode <= 1199){
+        } elseif ($getType == 1 && $kode == 800 && $kode <= 1199){
             $kode = $kode+200;
-        }elseif($getType == 0 && $kode > 999 || $getType == 1 && $kode > 1199){
+        } elseif ($getType == 0 && $kode > 999 || $getType == 1 && $kode > 1199){
             $kode = Coa::get()->max('kode')+1;
         }
 
@@ -106,13 +105,13 @@ class CoaController extends Controller
 
         $type = Category::where('id', $request->category_id)->first()->indicator;
         
-        if($typeTransaksi !== $type){
-            if($typeTransaksi == 0 && $type == 1){
-                $kode = Coa::whereHas('category', function($q){
+        if ($typeTransaksi !== $type) {
+            if ($typeTransaksi == 0 && $type == 1) {
+                $kode = Coa::whereHas('category', function($q) {
                     $q->where('indicator', '1');
                 })->get()->max('kode')+1;
-            }elseif($typeTransaksi == 1 &&  $type == 0){
-                $kode = Coa::whereHas('category', function($q){
+            } elseif ($typeTransaksi == 1 &&  $type == 0) {
+                $kode = Coa::whereHas('category', function($q) {
                     $q->where('indicator', '0');
                 })->get()->max('kode')+1;
             }
@@ -146,14 +145,14 @@ class CoaController extends Controller
     {
         $coa = Coa::find($id);
         $transaksi = Transaksi::where('coa_id',$id)->get()->count();
-        if($transaksi < 1){
+        if ($transaksi < 1) {
             $coa->delete();
 
             return response()->json([
                 'success' => true,
                 'message' => 'row deleted successfully!.',
             ]); 
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Account is still in use.',
