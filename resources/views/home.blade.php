@@ -42,7 +42,7 @@
       type: 'line',
       data: {
         labels: [
-                @foreach(array_reverse($bulan) as $items)
+                @foreach (array_reverse($bulan) as $items)
                 `{{date("Y-m",strtotime($items['bln']))}}`,
                 @endforeach
         ],
@@ -50,7 +50,7 @@
             [{
             label: 'Profits in the last 12 months',
             data: [
-              @foreach(array_reverse($bulan) as $items)
+              @foreach (array_reverse($bulan) as $items)
                 `{{$items['sum']}}`,
               @endforeach
             ],

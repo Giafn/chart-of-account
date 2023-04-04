@@ -20,7 +20,7 @@
                                 <div class="form-group">
                                     <input type="date" class="form-control {{ $errors->has('startdate') ? 'is-invalid':'' }}" name="startdate"
                                     placeholder="Dari Tanggal"
-                                    @if(isset($fromtanggal))
+                                    @if (isset($fromtanggal))
                                       value="{{$fromtanggal['start']}}"
                                     @endif
                                     >
@@ -30,7 +30,7 @@
                                 <div class="form-group">
                                     <input type="date" class="form-control {{ $errors->has('enddate') ? 'is-invalid':'' }}" name="enddate"
                                     placeholder="Sampai Tanggal"
-                                    @if(isset($fromtanggal))
+                                    @if (isset($fromtanggal))
                                       value="{{$fromtanggal['end']}}"
                                     @endif
                                     >
@@ -120,8 +120,8 @@
                               <option value="null" disabled >-silahkan pilih-</option>
                               @for($i = 0; $i < count($category); $i++)
                                 <optgroup label="{{$category[$i]}}">
-                                  @for($p = 0; $p < $row; $p++)
-                                    @if($category[$i] == $coa[$p]['nama_category'])
+                                  @for ($p = 0; $p < $row; $p++)
+                                    @if ($category[$i] == $coa[$p]['nama_category'])
                                     <option value="{{$coa[$p]['id']}}">{{$coa[$p]['kode']}}-{{$coa[$p]['nama']}}</option>
                                     @endif
                                   @endfor
@@ -166,10 +166,10 @@
                             <label class="form-label">Nama Account</label>
                             <select id="edit-coa_id" class="form-select" name="edit-coa_id">
                               <option value="null" disabled >-silahkan pilih-</option>
-                              @for($i = 0; $i < count($category); $i++)
+                              @for ($i = 0; $i < count($category); $i++)
                                 <optgroup label="{{$category[$i]}}">
-                                  @for($p = 0; $p < $row; $p++)
-                                    @if($category[$i] == $coa[$p]['nama_category'])
+                                  @for ($p = 0; $p < $row; $p++)
+                                    @if ($category[$i] == $coa[$p]['nama_category'])
                                     <option value="{{$coa[$p]['id']}}">{{$coa[$p]['kode']}}-{{$coa[$p]['nama']}}</option>
                                     @endif
                                   @endfor

@@ -32,7 +32,7 @@
                                 <input type="number" name="years" 
                                 class="form-control {{ $errors->has('years') ? 'is-invalid':'' }}"
                                 id="tahun"
-                                @if(isset($request->years)) 
+                                @if (isset($request->years)) 
                                     value="{{ $request->years }}"
                                 @else
                                     value="{{ date('Y') }}"
@@ -57,7 +57,7 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <input type="month" class="form-control {{ $errors->has('tgl_awal') ? 'is-invalid':'' }}" name="tgl_awal"
-                                @if(isset($request->tgl_awal)) 
+                                @if (isset($request->tgl_awal)) 
                                     value="{{ $request->tgl_awal }}"
                                 @endif 
                                 placeholder="Dari Tanggal">
@@ -67,7 +67,7 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <input type="month" class="form-control {{ $errors->has('tgl_akhir') ? 'is-invalid':'' }}" name="tgl_akhir"
-                                @if(isset($request->tgl_akhir)) 
+                                @if (isset($request->tgl_akhir)) 
                                     value="{{ $request->tgl_akhir }}"
                                 @endif 
                                 placeholder="Sampai Tanggal">
@@ -86,7 +86,7 @@
             <form method="POST" action="{{url('/report')}}">
                 <input type="hidden" name="export" value="1">
                 @csrf
-                @if(isset($request->search))
+                @if (isset($request->search))
                     @if ($request->search == "bulan")
                         <input type="hidden" name="month" value="{{$request->month}}">
                         <input type="hidden" name="years" value="{{$request->years}}">
@@ -142,14 +142,14 @@
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                                     @if (count($data[$perbulan[$e]][0]) > 0)
                                         @foreach ($data[$perbulan[$e]][0] as $item)
-                                        @if(InArray($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
-                                            @if($item->category == $listCategory['income'][$i])
-                                                <td>{{number_format($item->amount)}}</td>
+                                            @if (InArray($listCategory['income'][$i],$data[$perbulan[$e]][0]->toArray()))
+                                                @if ($item->category == $listCategory['income'][$i])
+                                                    <td>{{number_format($item->amount)}}</td>
+                                                @endif
+                                            @elseif ($e == $h)
+                                                <td>0</td>
+                                                @php $h = -1 @endphp
                                             @endif
-                                        @elseif($e == $h)
-                                            <td>0</td>
-                                            @php $h = -1 @endphp
-                                        @endif
                                         @endforeach
                                     @else
                                         <td>0</td>
@@ -172,17 +172,21 @@
                         <tr>
                             <td>{{$listCategory['expense'][$i]}}</td>
                             @for ($e = 0; $e < count($perbulan); $e++) 
-                                @php $h = $e @endphp
+                                @php
+                                    $h = $e
+                                @endphp
                                 @if ($data[$perbulan[$e]][0]->sum('amount') > 1 | $data[$perbulan[$e]][1]->sum('amount') > 1)
                                     @if (count($data[$perbulan[$e]][1]) > 0)
                                         @foreach ($data[$perbulan[$e]][1] as $item)
-                                            @if(InArray($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
-                                                @if($item->category == $listCategory['expense'][$i])
+                                            @if (InArray($listCategory['expense'][$i],$data[$perbulan[$e]][1]->toArray()))
+                                                @if ($item->category == $listCategory['expense'][$i])
                                                     <td>{{number_format($item->amount)}}</td>
                                                 @endif
-                                            @elseif($e == $h)
+                                            @elseif ($e == $h)
                                                 <td>0</td>
-                                                @php $h = -1 @endphp
+                                                @php
+                                                    $h = -1
+                                                @endphp
                                             @endif
                                         @endforeach
                                     @else
@@ -208,7 +212,7 @@
                                     @php
                                         $netincome = $data[$perbulan[$e]][0]->sum('amount') - $data[$perbulan[$e]][1]->sum('amount')
                                     @endphp
-                                <th @if($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{number_format($netincome)}}</th>
+                                <th @if ($netincome < 0) style="color: rgb(243, 0, 0)" @endif>{{number_format($netincome)}}</th>
                                 @endif
                             @endfor
                         </tr>

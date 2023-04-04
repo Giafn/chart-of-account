@@ -11,7 +11,6 @@
                         <table class="table" id="myTable">
                             <thead>
                               <tr>
-                                {{-- <th scope="col" class="text-center">#</th> --}}
                                 <th scope="col" class="text-center">nama</th>
                                 <th scope="col" class="text-center">Type +</th>
                                 <th scope="col" class="text-center">Action</th>
@@ -20,7 +19,6 @@
                             <tbody id="tablebody">
                               @foreach ($data as $item)
                                   <tr class="text-center" id="{{'index_'.$item->id}}">
-                                    {{-- <th scope="row" id="nomor_{{$item->id}}" class="number"></th> --}}
                                     <td>{{ $item->nama}}</td>
                                     <td>@if($item->indicator == 1) Debit @else Kredit @endif</td>
                                     <td>
@@ -161,8 +159,7 @@
         let addnama   = $('#add-nama').val();
         let addtype = $('#add-type').val();
         let token   = $("meta[name='csrf-token']").attr("content");
-        // if(addtype == 'null')
-        //ajax
+
         $.ajax({
 
             url: `/add-category`,
@@ -177,18 +174,16 @@
 
                 toastr.success(response.message, 'Success');
 
-                //close modal
                 $('#add-modal').modal('hide');
-                //data baru
                 location.reload();
                 
 
             },
             error:function(error){
-                if(error.responseJSON.nama[0]){
+                if (error.responseJSON.nama[0]){
                   toastr.error(error.responseJSON.nama[0], 'Error!');
                 }
-                if(error.responseJSON.type[0]){
+                if (error.responseJSON.type[0]){
                   toastr.error(error.responseJSON.type[0], 'Error!');
                 }
             }
@@ -210,7 +205,6 @@
               $('#edit-nama').val(response.data.nama);
               $('#edit-type').val(response.data.indicator);
 
-              //open modal
               $('#modal-edit').modal('show');
           }
       });
@@ -267,12 +261,12 @@
             },
             error:function(error){
                 
-                if(error.responseJSON.nama[0]) {
+                if (error.responseJSON.nama[0]) {
 
                   toastr.error(error.responseJSON.nama[0], 'Error!');
                 } 
 
-                if(error.responseJSON.type[0]) {
+                if (error.responseJSON.type[0]) {
                   toastr.error(error.responseJSON.type[0], 'Error!');
                 } 
 
@@ -305,10 +299,10 @@
           },
           success:function(response){ 
               //notifikasi
-              if(response.success == true){
+              if (response.success == true){
                 toastr.success(response.message, 'Success');
                 location.reload();
-              }else{
+              } else {
                 toastr.error(response.message, 'Error!');
                 $('#modal-delete').modal('toggle');
               }

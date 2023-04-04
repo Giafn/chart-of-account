@@ -24,7 +24,13 @@
                                     <td scope="row" id="nomor_{{$item->id}}">{{ $item->kode}}</td>
                                     <td>{{ $item->nama}}</td>
                                     <td>{{ $item->category}}</td>
-                                    <td>@if($item->indicator == 1) Debit @else Kredit @endif</td>
+                                    <td>
+                                      @if ($item->indicator == 1)
+                                        Debit 
+                                      @else 
+                                        Kredit 
+                                      @endif
+                                    </td>
                                     <td>
                                       <div class="d-flex flex-row justify-content-center">
                                         <button class="btn btn-sm btn-warning m-1" id="btn-edit" data-id="{{$item->id}}"><i class="bi bi-pencil"></i></button>
@@ -71,9 +77,9 @@
                                   $typecategory[0] = 'Credit';
                                   $typecategory[1] = 'Debit';
                               @endphp
-                              @for($f = 0; $f < 2; $f++)
+                              @for ($f = 0; $f < 2; $f++)
                                 <optgroup label="type - {{$typecategory[$f]}}">
-                                  @for($i = 0; $i < $row; $i++)
+                                  @for ($i = 0; $i < $row; $i++)
                                     @if ($category[$i]['indicator'] == $f)
                                     <option value="{{$category[$i]['id']}}">{{$category[$i]['nama']}}</option>
                                     @endif
